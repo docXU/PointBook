@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.debug.xxw.pointbook.activity.ActivityWeiboList">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/weiboRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/titleT" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="43dp"
+        android:layout_marginEnd="55dp"
+        android:layout_marginRight="55dp"
+        android:src="@android:drawable/ic_input_add"
+        app:backgroundTint="@color/colorPrimary" />
+
+    <TextView
+        android:id="@+id/titleT"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/colorPrimary"
+        android:textSize="25sp"
+        android:gravity="center"
+        android:text="活动点"
+        android:textColor="@color/white" />
+
+</RelativeLayout>

@@ -1,0 +1,53 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
+    defaultConfig {
+        applicationId "com.debug.xxw.pointbook"
+        minSdkVersion 14
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            //设置支持的SO库架构（开发者可以根据需要，选择一个或多个平台的so）
+            abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "x86","arm64-v8a","x86_64"
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    //3D地图so及jar
+    compile 'com.amap.api:3dmap:latest.integration'
+    //定位功能
+    compile 'com.amap.api:location:latest.integration'
+    //搜索功能
+    compile 'com.amap.api:search:latest.integration'
+
+    compile 'com.android.support:appcompat-v7:26.+'
+    compile 'com.android.support:support-v4:26.+'
+    compile 'com.android.support:design:26.+'
+    compile 'com.android.support:cardview-v7:26.+'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.squareup.okhttp3:okhttp:3.9.0'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'ren.qinc.edit:lib:0.0.5'
+    compile 'com.github.LuckSiege.PictureSelector:picture_library:v2.1.7'
+    //客户端七牛
+    compile 'com.qiniu:qiniu-android-sdk:7.3.+'
+    //服务端qiniu
+    compile 'com.qiniu:qiniu-java-sdk:7.2.+'
+    testCompile 'junit:junit:4.12'
+}

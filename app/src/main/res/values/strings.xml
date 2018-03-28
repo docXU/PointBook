@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">PointBook</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="server_address">http://119.29.4.16/pointbook</string>
+    <string name="qiniu_address">http://oz5hnga51.bkt.clouddn.com/</string>
+
+
+    <string name="action_submit">提交</string>
+    <string name="action_redo">重做</string>
+    <string name="action_undo">撤销</string>
+    <string name="action_clear">清除撤销记录</string>
+    <string name="weibo_editor_hint">所想,所听,所见...</string>
+    <string name="query_weibolist_fail">加载数据失败了...稍后重试一下</string>
+
+    <string name="alert_dialog_ok">OK</string>
+    <string name="alert_dialog_cancel">Cancel</string>
+    <string name="storage_description_title">你能允许存储权限吗?</string>
+    <string name="storage_description_why_we_need_the_permission">你好,地图缓存需要存储权限。你能允许吗?</string>
+    <string name="location_description_title">你能允许定位权限吗?</string>
+    <string name="location_description_why_we_need_the_permission">你好,定位功能需要获取位置权限。你能允许吗?</string>
+</resources>

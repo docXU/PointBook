@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context="com.debug.xxw.pointbook.activity.Activity_editor">
+
+    <EditText
+        android:id="@+id/editweibo"
+        android:layout_width="match_parent"
+        android:layout_height="136dp"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:background="@null"
+        android:gravity="top"
+        android:hint="@string/weibo_editor_hint" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#ffffff"
+        />
+
+    <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:overScrollMode="never" />
+
+</LinearLayout>

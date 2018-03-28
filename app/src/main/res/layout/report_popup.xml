@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/report_button_Layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:visibility="visible">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:text="申报一个新的活动中心点"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.SearchResult.Subtitle"
+            android:textColor="@color/cardview_light_background"
+            android:textSize="20sp" />
+        <Button
+            android:id="@+id/reportSubmit"
+            style="@android:style/Widget.Material.Light.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:text="选择" />
+
+        <Button
+            android:id="@+id/cancle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="取消" />
+</LinearLayout>

@@ -33,6 +33,8 @@ import java.util.List;
  * package：com.luck.pictureselector.adapter
  * email：893855882@qq.com
  * data：16/7/27
+ *
+ * @author xxw
  */
 public class GridImageAdapter extends
         RecyclerView.Adapter<GridImageAdapter.ViewHolder> {
@@ -48,6 +50,9 @@ public class GridImageAdapter extends
     private onAddPicClickListener mOnAddPicClickListener;
 
     public interface onAddPicClickListener {
+        /**
+         * 点击“添加图片”按钮回调
+         */
         void onAddPicClick();
     }
 
@@ -104,12 +109,11 @@ public class GridImageAdapter extends
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = mInflater.inflate(R.layout.gv_filter_image,
                 viewGroup, false);
-        final ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+        return new ViewHolder(view);
     }
 
     private boolean isShowAddItem(int position) {
-        int size = list.size() == 0 ? 0 : list.size();
+        int size = list.size();
         return position == size;
     }
 
@@ -205,7 +209,7 @@ public class GridImageAdapter extends
         }
     }
 
-    protected OnItemClickListener mItemClickListener;
+    private OnItemClickListener mItemClickListener;
 
     public interface OnItemClickListener {
         void onItemClick(int position, View v);

@@ -24,13 +24,19 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 /**
+ * Feed流
+ *
+ * 活动点作为入口，解析id，地名
+ * id作为索引获取流，地名作为视图窗口标题
+ *
  * @author xxw
  */
 
 //todo：图片从服务器加载完之后缓存至本地，防止用户点击图片浏览重新下载
-public class ActivityWeiboList extends AppCompatActivity {
-    private String TAG = ActivityWeiboList.class.getSimpleName();
+public class FeedActivity extends AppCompatActivity {
+    private String tag = FeedActivity.class.getSimpleName();
     private RecyclerView recyclerView;
     private WeiboListViewAdapter adapter;
     private final int RequestCode = 10;
@@ -44,24 +50,27 @@ public class ActivityWeiboList extends AppCompatActivity {
         WeiboNetter mWeiboNetter = new WeiboNetter(getApplicationContext());
 
         //解析bundle
-        if (bundle == null) throw new NullPointerException("没有点的身份信息");
+        if (bundle == null) {
+            throw new NullPointerException("没有点的身份信息");
+        }
         final String entryId = bundle.getString("entry_id");
         final String entryName = bundle.getString("name");
 
         TextView titleTV = (TextView) findViewById(R.id.titleT);
-        if (entryName != null)
+        if (entryName != null) {
             titleTV.setText(entryName);
+        }
         //初始化浮层按钮
         findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent();
                 intent.putExtra("entry_id", entryId);
-                intent.setClass(ActivityWeiboList.this, Activity_editor.class);
+                intent.setClass(FeedActivity.this, EditorActivity.class);
                 startActivityForResult(intent, RequestCode);
             }
         });
-        if(null == adapter) {
+        if (null == adapter) {
             adapter = new WeiboListViewAdapter(getApplicationContext(), new ArrayList<Weibo>());
             recyclerView.setLayoutManager(
                     new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -76,16 +85,16 @@ public class ActivityWeiboList extends AppCompatActivity {
                     if (isList(data)) {
                         adapter.setList(parseResultToWeibo(result));
                     } else {
-                        Log.e(TAG, parseErrorMessage(data));
+                        Log.e(tag, parseErrorMessage(data));
                     }
                 } catch (JSONException je) {
-                    Log.e(TAG, Arrays.toString(je.getStackTrace()));
+                    Log.e(tag, Arrays.toString(je.getStackTrace()));
                 }
             }
 
             @Override
             public void onReqFailed(String errorMsg) {
-                Log.e(TAG, errorMsg);
+                Log.e(tag, errorMsg);
                 Toast.makeText(getApplicationContext(), R.string.query_weibolist_fail, Toast.LENGTH_SHORT).show();
             }
         });
@@ -119,18 +128,18 @@ public class ActivityWeiboList extends AppCompatActivity {
                     item.setContentImgs(ngm);
                     items.add(item);
                 } catch (JSONException je) {
-                    Log.e(TAG, je.toString());
+                    Log.e(tag, je.toString());
                 }
             }
         } catch (JSONException je) {
-            Log.e(TAG, je.toString());
+            Log.e(tag, je.toString());
         }
         return items;
     }
 
     /**
      * 回调方法，从第二个页面回来的时候会执行这个方法
-      */
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         String submitStatus = null;
@@ -140,7 +149,7 @@ public class ActivityWeiboList extends AppCompatActivity {
         if (submitStatus == null) return;
         switch (requestCode) {
             case RequestCode:
-                switch (submitStatus){
+                switch (submitStatus) {
                     case "ok":
                         Weibo w = (Weibo) data.getSerializableExtra("weibo");
                         adapter.addWeiboToList(w);
@@ -149,7 +158,8 @@ public class ActivityWeiboList extends AppCompatActivity {
                     case "fail":
                         Toast.makeText(getApplicationContext(), "发布失败...稍后重试", Toast.LENGTH_LONG).show();
                         break;
-                    default:break;
+                    default:
+                        break;
                 }
                 break;
             default:

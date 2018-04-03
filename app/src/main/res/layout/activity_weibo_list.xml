@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.debug.xxw.pointbook.activity.ActivityWeiboList">
+    tools:context="com.debug.xxw.pointbook.activity.FeedActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/weiboRecycler"

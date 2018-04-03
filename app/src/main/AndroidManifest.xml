@@ -17,29 +17,22 @@
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".activity.ActivityWeiboList"
-            android:label="@string/app_name" />
-
-        <activity
-            android:name=".activity.Activity_editor"
-            android:label="发布" />
+        <activity android:name=".activity.FeedActivity" android:label="@string/app_name" />
+        <activity android:name=".activity.EditorActivity" android:label="发布" />
 
         <!-- release 0050f84cadd37b603e40a86917839a31-->
         <!-- develop 01559bbd7e79fbffbaf241950cbc98cb-->
-        <meta-data android:name="com.amap.api.v2.apikey" android:value="01559bbd7e79fbffbaf241950cbc98cb"> </meta-data>
+        <meta-data android:name="com.amap.api.v2.apikey" android:value="01559bbd7e79fbffbaf241950cbc98cb"/>
     </application>
 
     //地图包、搜索包需要的基础权限
-    <!-- Normal Permissions 不需要运行时注册 -->
+    <!-- Normal Permissions-->
     <!-- 请求网络 -->
-    <uses-permission android:name="android.permission.INTERNET"
-        tools:ignore="ManifestOrder" />
+    <uses-permission android:name="android.permission.INTERNET" tools:ignore="ManifestOrder" />
     <!--获取运营商信息，用于支持提供运营商信息相关的接口-->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!--用于访问wifi网络信息，wifi信息会用于进行网络定位-->
@@ -47,7 +40,6 @@
     <!--这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
 
     <!-- 需要运行时注册的权限 -->
     <!--用于进行网络定位-->
@@ -60,7 +52,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!--读取缓存数据-->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <!-- 更改设置 -->
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <!-- 更改设置 -->
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
 
 </manifest>

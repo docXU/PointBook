@@ -1,16 +1,11 @@
 package com.debug.xxw.pointbook.net;
 
 import android.content.Context;
-import android.content.Entity;
 import android.util.Log;
 
-import com.debug.xxw.pointbook.activity.Activity_editor;
 import com.debug.xxw.pointbook.model.Weibo;
-import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**

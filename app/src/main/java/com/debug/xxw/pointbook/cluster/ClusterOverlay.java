@@ -1,4 +1,4 @@
-package com.debug.xxw.pointbook.ClusterLib;
+package com.debug.xxw.pointbook.cluster;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -77,6 +77,7 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
                           int clusterSize, Context context) {
         //默认最多会缓存80张图片作为聚合显示元素图片,根据自己显示需求和app使用内存情况,可以修改数量
         mLruCache = new LruCache<Integer, BitmapDescriptor>(80) {
+            @Override
             protected void entryRemoved(boolean evicted, Integer key, BitmapDescriptor oldValue, BitmapDescriptor newValue) {
                 oldValue.getBitmap().recycle();
             }
@@ -307,8 +308,9 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
     /**
      * 根据一个点获取是否可以依附的聚合点，没有则返回null
      *
-     * @param latLng
-     * @return
+     * @param latLng 经纬度
+     * @param clusters 点集
+     * @return Cluster
      */
     private Cluster getCluster(LatLng latLng,List<Cluster> clusters) {
         for (Cluster cluster : clusters) {
@@ -321,7 +323,6 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
 
         return null;
     }
-
 
     /**
      * 获取每个聚合点的绘制样式
@@ -402,6 +403,7 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
             super(looper);
         }
 
+        @Override
         public void handleMessage(Message message) {
 
             switch (message.what) {
@@ -417,6 +419,7 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
                     Cluster updateCluster = (Cluster) message.obj;
                     updateCluster(updateCluster);
                     break;
+                    default:break;
             }
         }
     }
@@ -432,6 +435,7 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
             super(looper);
         }
 
+        @Override
         public void handleMessage(Message message) {
             switch (message.what) {
                 case CALCULATE_CLUSTER:
@@ -443,6 +447,7 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
                     Log.i("yiyi.qi","calculate single cluster");
                     calculateSingleCluster(item);
                     break;
+                    default:break;
             }
         }
     }

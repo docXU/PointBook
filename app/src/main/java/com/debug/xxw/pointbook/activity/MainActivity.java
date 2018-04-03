@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements HintDialogFragmen
             @Override
             public void onPOIClick(Poi poi) {
                 Intent intent = new Intent();
-                intent.setClass(MainActivity.this, ActivityWeiboList.class);
+                intent.setClass(MainActivity.this, FeedActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("entry_id", poi.getPoiId());
                 bundle.putString("name", poi.getName());

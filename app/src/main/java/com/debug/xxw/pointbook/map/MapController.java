@@ -38,11 +38,11 @@ import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
-import com.debug.xxw.pointbook.ClusterLib.ClusterClickListener;
-import com.debug.xxw.pointbook.ClusterLib.ClusterItem;
-import com.debug.xxw.pointbook.ClusterLib.ClusterOverlay;
-import com.debug.xxw.pointbook.ClusterLib.ClusterRender;
-import com.debug.xxw.pointbook.activity.ActivityWeiboList;
+import com.debug.xxw.pointbook.cluster.ClusterClickListener;
+import com.debug.xxw.pointbook.cluster.ClusterItem;
+import com.debug.xxw.pointbook.cluster.ClusterOverlay;
+import com.debug.xxw.pointbook.cluster.ClusterRender;
+import com.debug.xxw.pointbook.activity.FeedActivity;
 import com.debug.xxw.pointbook.model.RegionItem;
 import com.debug.xxw.pointbook.R;
 import com.debug.xxw.pointbook.model.ReportPoint;
@@ -70,7 +70,7 @@ public class MapController implements ClusterRender, ClusterClickListener {
     private AMap mAMap;
     private MarkerNetter mMarkerNetter;
 
-    private Map<Integer, Drawable> mBackDrawAbles = new HashMap<Integer, Drawable>();
+    private Map<Integer, Drawable> mBackDrawAbles = new HashMap<>();
     private ClusterOverlay mClusterOverlay;
     private final Context mainContext;
     private Activity mainActivity;
@@ -147,7 +147,7 @@ public class MapController implements ClusterRender, ClusterClickListener {
             @Override
             public void onReqSuccess(Object result) {
                 final List<ClusterItem> markerList = parseResultToMarkerList(result);
-                new Thread() {
+                mainActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         mClusterOverlay = new ClusterOverlay(mAMap, markerList,
@@ -156,7 +156,7 @@ public class MapController implements ClusterRender, ClusterClickListener {
                         mClusterOverlay.setClusterRenderer(MapController.this);
                         mClusterOverlay.setOnClusterClickListener(MapController.this);
                     }
-                }.start();
+                });
             }
 
             /***
@@ -327,7 +327,7 @@ public class MapController implements ClusterRender, ClusterClickListener {
     private void goToWeibo(RegionItem item) {
         //todo: 检测点的空属性
         Intent intent = new Intent();
-        intent.setClass(mainActivity, ActivityWeiboList.class);
+        intent.setClass(mainActivity, FeedActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("entry_id", item.getId());
         bundle.putString("name", item.getTitle());

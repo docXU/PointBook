@@ -1,4 +1,4 @@
-package com.debug.xxw.pointbook.ClusterLib;
+package com.debug.xxw.pointbook.cluster;
 
 import android.graphics.drawable.Drawable;
 

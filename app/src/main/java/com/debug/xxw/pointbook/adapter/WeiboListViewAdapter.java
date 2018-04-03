@@ -2,13 +2,11 @@ package com.debug.xxw.pointbook.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.amap.api.maps.model.Text;
 import com.debug.xxw.pointbook.R;
 import com.debug.xxw.pointbook.model.Weibo;
 import com.debug.xxw.pointbook.viewmodel.CircleImageView;
@@ -51,9 +49,9 @@ public class WeiboListViewAdapter extends RecyclerView.Adapter<RecyclerView.View
         mViewHolder.publicTime.setText(mList.get(position).getPublicTime());
         mViewHolder.from.setText(mList.get(position).getFrom());
         mViewHolder.textContent.setText(mList.get(position).getContent());
-        mViewHolder.recent_like.setText(mList.get(position).getRecentLike());
-        mViewHolder.recent_share.setText(mList.get(position).getRecentShare());
-        mViewHolder.recent_comment.setText(mList.get(position).getRecentComment());
+        mViewHolder.recentLike.setText(mList.get(position).getRecentLike());
+        mViewHolder.recentShare.setText(mList.get(position).getRecentShare());
+        mViewHolder.recentComment.setText(mList.get(position).getRecentComment());
         mViewHolder.nicePic.setIsShowAll(mList.get(position).getContentImgs().isShowAll);
         mViewHolder.nicePic.setUrlList(mList.get(position).getContentImgs().urlList);
     }
@@ -63,8 +61,8 @@ public class WeiboListViewAdapter extends RecyclerView.Adapter<RecyclerView.View
         return getListSize(mList);
     }
 
-    public void setList(List<Weibo> List) {
-        mList = List;
+    public void setList(List<Weibo> list) {
+        mList = list;
         this.notifyDataSetChanged();
     }
 
@@ -76,11 +74,11 @@ public class WeiboListViewAdapter extends RecyclerView.Adapter<RecyclerView.View
         TextView from;
         TextView textContent;
         NineGridTestLayout nicePic;
-        TextView recent_like;
-        TextView recent_share;
-        TextView recent_comment;
+        TextView recentLike;
+        TextView recentShare;
+        TextView recentComment;
 
-        public CommunityViewHolder(View itemView) {
+        CommunityViewHolder(View itemView) {
             super(itemView);
 
             nicePic = itemView.findViewById(R.id.layout_nine_grid);
@@ -89,9 +87,9 @@ public class WeiboListViewAdapter extends RecyclerView.Adapter<RecyclerView.View
             publicTime = itemView.findViewById(R.id.publicTime);
             from = itemView.findViewById(R.id.from);
             textContent = itemView.findViewById(R.id.textContent);
-            recent_like = itemView.findViewById(R.id.recent_like);
-            recent_share = itemView.findViewById(R.id.recent_share);
-            recent_comment = itemView.findViewById(R.id.recent_comment);
+            recentLike = itemView.findViewById(R.id.recent_like);
+            recentShare = itemView.findViewById(R.id.recent_share);
+            recentComment = itemView.findViewById(R.id.recent_comment);
 
         }
     }

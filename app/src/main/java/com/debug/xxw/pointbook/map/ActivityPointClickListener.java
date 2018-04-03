@@ -1,9 +1,6 @@
 package com.debug.xxw.pointbook.map;
 
 import com.amap.api.maps.model.Marker;
-import com.debug.xxw.pointbook.ClusterLib.ClusterItem;
-
-import java.util.List;
 
 /**
  * Created by xxw on 2017/10/21.

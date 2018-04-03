@@ -48,11 +48,14 @@ import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import ren.qinc.edit.PerformEdit;
 
-public class Activity_editor extends AppCompatActivity {
+/**
+ * @author xxw
+ */
+public class EditorActivity extends AppCompatActivity {
     private int RequestCode = 10;
     private EditText mEditText;
     private GridImageAdapter adapter;
-    private final static String TAG = Activity_editor.class.getSimpleName();
+    private final static String TAG = EditorActivity.class.getSimpleName();
     private List<LocalMedia> selectList = new ArrayList<>();
 
     private Weibo newWeiboInstance = new Weibo();
@@ -86,9 +89,9 @@ public class Activity_editor extends AppCompatActivity {
             @Override
             public void onNext(Boolean aBoolean) {
                 if (aBoolean) {
-                    PictureFileUtils.deleteCacheDirFile(Activity_editor.this);
+                    PictureFileUtils.deleteCacheDirFile(EditorActivity.this);
                 } else {
-                    Toast.makeText(Activity_editor.this,
+                    Toast.makeText(EditorActivity.this,
                             getString(R.string.picture_jurisdiction) + "，无法清楚本地缓存，请试着手动清理", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -115,9 +118,9 @@ public class Activity_editor extends AppCompatActivity {
         }
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler);
-        FullyGridLayoutManager manager = new FullyGridLayoutManager(Activity_editor.this, 4, GridLayoutManager.VERTICAL, false);
+        FullyGridLayoutManager manager = new FullyGridLayoutManager(EditorActivity.this, 4, GridLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
-        adapter = new GridImageAdapter(Activity_editor.this, onAddPicClickListener);
+        adapter = new GridImageAdapter(EditorActivity.this, onAddPicClickListener);
         adapter.setList(selectList);
         adapter.setSelectMax(9);
         recyclerView.setAdapter(adapter);
@@ -132,15 +135,17 @@ public class Activity_editor extends AppCompatActivity {
                         case 1:
                             // 预览图片 可自定长按保存路径
                             //PictureSelector.create(MainActivity.this).externalPicturePreview(position, selectList);
-                            PictureSelector.create(Activity_editor.this).externalPicturePreview(position, "/save", selectList);
+                            PictureSelector.create(EditorActivity.this).externalPicturePreview(position, "/save", selectList);
                             break;
                         case 2:
                             // 预览视频
-                            PictureSelector.create(Activity_editor.this).externalPictureVideo(media.getPath());
+                            PictureSelector.create(EditorActivity.this).externalPictureVideo(media.getPath());
                             break;
                         case 3:
                             // 预览音频
-                            PictureSelector.create(Activity_editor.this).externalPictureAudio(media.getPath());
+                            PictureSelector.create(EditorActivity.this).externalPictureAudio(media.getPath());
+                            break;
+                        default:
                             break;
                     }
                 }
@@ -153,7 +158,7 @@ public class Activity_editor extends AppCompatActivity {
         @Override
         public void onAddPicClick() {
             // 进入相册 以下是例子：不需要的api可以不写
-            PictureSelector.create(Activity_editor.this)
+            PictureSelector.create(EditorActivity.this)
                     .openGallery(PictureMimeType.ofAll())// 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
                     .theme(R.style.picture_default_style)// 主题样式设置 具体参考 values/styles   用法：R.style.picture.white.style
                     .maxSelectNum(12)// 最大图片选择数量
@@ -215,6 +220,8 @@ public class Activity_editor extends AppCompatActivity {
                     adapter.setList(selectList);
                     adapter.notifyDataSetChanged();
                     break;
+                default:
+                    break;
             }
         }
     }
@@ -239,10 +246,10 @@ public class Activity_editor extends AppCompatActivity {
                 nineGridTestModel.remoteUrlList.put(i, "upload fail");
                 i++;
             }
-            new Thread(new Runnable() {
+            runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(Activity_editor.this, "正在上传图片...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditorActivity.this, "正在上传图片...", Toast.LENGTH_SHORT).show();
                     for (String path : nineGridTestModel.urlList) {
                         final String locality = path;
                         mQiniuUtils.uploadFile(locality, new UpCompletionHandler() {
@@ -265,7 +272,7 @@ public class Activity_editor extends AppCompatActivity {
                                         Log.i(TAG + "qiniu", "Upload Fail");
                                         //如果失败，这里可以把info信息上报自己的服务器，便于后面分析上传错误原因
                                         Log.e(res.getString("code"), res.getString("error"));
-                                        if (res.getString("error").equals("token out of date")) {
+                                        if ("token out of date".equals(res.getString("error"))) {
                                             mQiniuUtils.queryToken();
                                         }
                                     }
@@ -281,7 +288,7 @@ public class Activity_editor extends AppCompatActivity {
 
                                     submitWeibo();
                                     Log.i(TAG, "uploadTask Complete");
-                                    Toast.makeText(Activity_editor.this, "图片上传完毕~", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(EditorActivity.this, "图片上传完毕~", Toast.LENGTH_SHORT).show();
                                 } else {
                                     Log.i(TAG, "uploadTask Running...");
                                 }
@@ -289,7 +296,7 @@ public class Activity_editor extends AppCompatActivity {
                         });
                     }
                 }
-            }).start();
+            });
         } else {
             submitWeibo();
         }
@@ -326,7 +333,9 @@ public class Activity_editor extends AppCompatActivity {
         });
     }
 
-    //onRequestPermissionsResult()方法权限回调绑定到对象
+    /**
+     * onRequestPermissionsResult()方法权限回调绑定到对象
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

@@ -12,6 +12,8 @@ import android.view.ViewGroup;
  * package：com.luck.picture.ui
  * email：893855882@qq.com
  * data：16/12/31
+ *
+ * @author xxw
  */
 
 public class FullyGridLayoutManager extends GridLayoutManager {
@@ -64,6 +66,7 @@ public class FullyGridLayoutManager extends GridLayoutManager {
                 width = widthSize;
             case View.MeasureSpec.AT_MOST:
             case View.MeasureSpec.UNSPECIFIED:
+                default:break;
         }
 
         switch (heightMode) {
@@ -71,12 +74,13 @@ public class FullyGridLayoutManager extends GridLayoutManager {
                 height = heightSize;
             case View.MeasureSpec.AT_MOST:
             case View.MeasureSpec.UNSPECIFIED:
+                default:break;
         }
 
         setMeasuredDimension(width, height);
     }
 
-    final RecyclerView.State mState = new RecyclerView.State();
+    private final RecyclerView.State mState = new RecyclerView.State();
 
     private void measureScrapChild(RecyclerView.Recycler recycler, int position, int widthSpec,
                                    int heightSpec, int[] measuredDimension) {

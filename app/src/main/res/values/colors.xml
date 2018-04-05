@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#000000</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="black_light">#211e1e</color>
@@ -15,10 +15,13 @@
 
     <color name="bar_grey">#393a3e</color>
     <color name="color_f6">#f6f6f6</color>
-    <color name="transparent">#00000000</color>
+    <color name="transparent">#ee232323</color>
     <color name="blue">#7D7DFF</color>
     <color name="color_fa">#fafafa</color>
     <color name="divider">#B6B6B6</color>
     <color name="color_c51">#f94c51</color>
     <color name="color_green">#43c117</color>
+
+    <color name="colorCircleText">#FDC738</color>
+    <color name="colorSearchView">#4e6162</color>
 </resources>

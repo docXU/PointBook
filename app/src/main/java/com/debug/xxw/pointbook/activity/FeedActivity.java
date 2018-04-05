@@ -2,6 +2,7 @@ package com.debug.xxw.pointbook.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -61,7 +62,7 @@ public class FeedActivity extends AppCompatActivity {
             titleTV.setText(entryName);
         }
         //初始化浮层按钮
-        findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.post_fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent();
@@ -146,7 +147,9 @@ public class FeedActivity extends AppCompatActivity {
         if (data != null) {
             submitStatus = data.getStringExtra("status");
         }
-        if (submitStatus == null) return;
+        if (submitStatus == null) {
+            return;
+        }
         switch (requestCode) {
             case RequestCode:
                 switch (submitStatus) {

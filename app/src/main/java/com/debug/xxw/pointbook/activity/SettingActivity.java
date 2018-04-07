@@ -1,5 +1,6 @@
 package com.debug.xxw.pointbook.activity;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -23,7 +24,6 @@ import java.util.List;
  * @author xxw
  */
 public class SettingActivity extends AppCompatActivity {
-    private SettingView mSettingView;
     private List<HashMap<String, Object>> mListData;
     private List<HashMap<String, Object>> mGridData;
     private final String FUN_NAME = "fun_name";
@@ -34,7 +34,7 @@ public class SettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         initData();
-        mSettingView = (SettingView) findViewById(R.id.setting_view);
+        SettingView mSettingView = (SettingView) findViewById(R.id.setting_view);
         mSettingView.setListAdapter(new SettingListAdapter());
         mSettingView.setGridAdapter(new SettingGridAdapter());
     }
@@ -112,6 +112,7 @@ public class SettingActivity extends AppCompatActivity {
             return 0;
         }
 
+        @SuppressLint("InflateParams")
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ListViewHolder holder;
@@ -150,6 +151,7 @@ public class SettingActivity extends AppCompatActivity {
             return 0;
         }
 
+        @SuppressLint("InflateParams")
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ListViewHolder holder;

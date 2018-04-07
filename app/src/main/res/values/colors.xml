@@ -15,7 +15,7 @@
 
     <color name="bar_grey">#393a3e</color>
     <color name="color_f6">#f6f6f6</color>
-    <color name="transparent">#ee232323</color>
+    <color name="transparent">#ee000000</color>
     <color name="blue">#7D7DFF</color>
     <color name="color_fa">#fafafa</color>
     <color name="divider">#B6B6B6</color>

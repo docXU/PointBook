@@ -3,6 +3,7 @@ package com.debug.xxw.pointbook.net;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.debug.xxw.pointbook.R;
@@ -24,18 +25,19 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
- * Created by xxw on 2017/10/21.
+ * @author xxw
+ * @date 2017/10/21
  */
 
 public class RequestManager {
-    private static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8");//mdiatype 这个需要和服务端保持一致
+    private static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8"); //mdiatype 这个需要和服务端保持一致
     private static final MediaType MEDIA_TYPE_MARKDOWN = MediaType.parse("text/x-markdown; charset=utf-8");//mdiatype 这个需要和服务端保持一致
     private static final String TAG = RequestManager.class.getSimpleName();
     private String BASE_URL;  //请求接口根地址
     private static volatile RequestManager mInstance;//单利引用
     public static final int TYPE_GET = 0;//get请求
-    public static final int TYPE_POST_JSON = 1;//post请求参数为json
-    public static final int TYPE_POST_FORM = 2;//post请求参数为表单
+    private static final int TYPE_POST_JSON = 1;//post请求参数为json
+    private static final int TYPE_POST_FORM = 2;//post请求参数为表单
     private OkHttpClient mOkHttpClient;//okHttpClient 实例
     private Handler okHttpHandler;//全局处理子线程和M主线程通信
 
@@ -93,6 +95,7 @@ public class RequestManager {
             case TYPE_POST_FORM:
                 requestPostBySynWithForm(actionUrl, paramsMap);
                 break;
+                default:break;
         }
     }
 
@@ -222,6 +225,7 @@ public class RequestManager {
             case TYPE_POST_FORM:
                 call = requestPostByAsynWithForm(actionUrl, paramsMap, callBack);
                 break;
+                default:break;
         }
         return call;
     }
@@ -501,13 +505,13 @@ public class RequestManager {
             final Call call = mOkHttpClient.newBuilder().writeTimeout(50, TimeUnit.SECONDS).build().newCall(request);
             call.enqueue(new Callback() {
                 @Override
-                public void onFailure(Call call, IOException e) {
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
                     Log.e(TAG, e.toString());
                     failedCallBack("上传失败", callBack);
                 }
 
                 @Override
-                public void onResponse(Call call, Response response) throws IOException {
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                     if (response.isSuccessful()) {
                         String string = response.body().string();
                         Log.e(TAG, "response ----->" + string);

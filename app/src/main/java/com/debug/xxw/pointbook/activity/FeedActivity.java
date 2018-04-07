@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -31,11 +32,9 @@ import java.util.List;
  *
  * 活动点作为入口，解析id，地名
  * id作为索引获取流，地名作为视图窗口标题
- *
+ * todo：图片从服务器加载完之后缓存至本地，用户点击图片浏览时优先加载本地资源，可让用户手动清理缓存
  * @author xxw
  */
-
-//todo：图片从服务器加载完之后缓存至本地，防止用户点击图片浏览重新下载
 public class FeedActivity extends AppCompatActivity {
     private String tag = FeedActivity.class.getSimpleName();
     private RecyclerView recyclerView;
@@ -50,9 +49,12 @@ public class FeedActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.weiboRecycler);
         WeiboNetter mWeiboNetter = new WeiboNetter(getApplicationContext());
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         //解析bundle
         if (bundle == null) {
-            throw new NullPointerException("没有点的身份信息");
+            throw new IllegalArgumentException("没有点的身份信息");
         }
         final String entryId = bundle.getString("entry_id");
         final String entryName = bundle.getString("name");

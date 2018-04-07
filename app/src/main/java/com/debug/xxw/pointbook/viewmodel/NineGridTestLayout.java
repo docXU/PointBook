@@ -20,9 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 描述：
- * 作者：HMY
- * 时间：2016/5/12
+ * @author xxw
  */
 public class NineGridTestLayout extends NineGridLayout {
 
@@ -41,7 +39,7 @@ public class NineGridTestLayout extends NineGridLayout {
         if (!url.startsWith("http")) {
             url = "file://" + url;
         }
-        ImageLoaderUtil.displayImage(mContext, imageView, url, ImageLoaderUtil.getPhotoImageOption(), new ImageLoadingListener() {
+        ImageLoaderUtil.displayImage(imageView, url, ImageLoaderUtil.getPhotoImageOption(), new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
             }
@@ -58,10 +56,12 @@ public class NineGridTestLayout extends NineGridLayout {
 
                 int newW;
                 int newH;
-                if (h > w * MAX_W_H_RATIO) {//h:w = 5:3
+                if (h > w * MAX_W_H_RATIO) {
+                    //h:w = 5:3
                     newW = parentWidth / 2;
                     newH = newW * 5 / 3;
-                } else if (h < w) {//h:w = 2:3
+                } else if (h < w) {
+                    //h:w = 2:3
                     newW = parentWidth * 2 / 3;
                     newH = newW * 2 / 3;
                 } else {//newH:h = newW :w

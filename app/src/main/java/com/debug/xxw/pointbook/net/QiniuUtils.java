@@ -12,7 +12,9 @@ import java.io.File;
 import java.net.URI;
 
 /**
- * Created by xxw on 2017/12/18.
+ *
+ * @author xxw
+ * @date 2017/12/18
  */
 
 public class QiniuUtils {
@@ -20,7 +22,7 @@ public class QiniuUtils {
     private static String token = "";
     private int uploadComItemCount = 0;
 
-    public synchronized void UploadCurItemComplete() {
+    public synchronized void uploadCurItemComplete() {
         uploadComItemCount++;
     }
 
@@ -28,13 +30,14 @@ public class QiniuUtils {
         return uploadComItemCount;
     }
 
-    public synchronized void UploadTaskComplete() {
+    public synchronized void uploadTaskComplete() {
         uploadComItemCount = 0;
     }
 
     public void uploadFile(String path, UpCompletionHandler upCompletionHandler) {
-        if (token.equals(""))
+        if ("".equals(token)) {
             queryToken();
+        }
 
         Configuration config = new Configuration.Builder()
                 .zone(FixedZone.zone2)
@@ -45,8 +48,8 @@ public class QiniuUtils {
     }
 
     public void queryToken() {
-        String accessKey = "7CP2LqebbmZo8LkFkV51hypP3dLPa6-_jpkTgZwt";
-        String secretKey = "k4f_rL4L4rwQu6bnvcoJxg70AXL2CnRpA3fwK9zW";
+        final String accessKey = "7CP2LqebbmZo8LkFkV51hypP3dLPa6-_jpkTgZwt";
+        final String secretKey = "k4f_rL4L4rwQu6bnvcoJxg70AXL2CnRpA3fwK9zW";
         String bucket = "pointbook1";
         Auth auth = Auth.create(accessKey, secretKey);
         String upToken = auth.uploadToken(bucket);

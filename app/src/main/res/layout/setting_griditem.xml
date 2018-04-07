@@ -7,7 +7,8 @@
         android:id="@+id/fun_ic"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:contentDescription="@string/setting_icon" />
     <TextView
         android:id="@+id/fun_name"
         android:layout_width="wrap_content"

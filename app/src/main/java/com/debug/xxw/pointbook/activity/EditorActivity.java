@@ -280,9 +280,9 @@ public class EditorActivity extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
                                 //上传完毕
-                                mQiniuUtils.UploadCurItemComplete();
+                                mQiniuUtils.uploadCurItemComplete();
                                 if (mQiniuUtils.getUploadComItemCount() == picsSize) {
-                                    mQiniuUtils.UploadTaskComplete();
+                                    mQiniuUtils.uploadTaskComplete();
                                     newWeiboInstance.setContentImgs(nineGridTestModel);
                                     Log.i(TAG, nineGridTestModel.remoteUrlList.size() + "");
 

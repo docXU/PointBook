@@ -1,7 +1,9 @@
 package com.debug.xxw.pointbook.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -49,6 +51,8 @@ public class FeedActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.weiboRecycler);
         WeiboNetter mWeiboNetter = new WeiboNetter(getApplicationContext());
 
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -59,10 +63,11 @@ public class FeedActivity extends AppCompatActivity {
         final String entryId = bundle.getString("entry_id");
         final String entryName = bundle.getString("name");
 
-        TextView titleTV = (TextView) findViewById(R.id.titleT);
-        if (entryName != null) {
-            titleTV.setText(entryName);
-        }
+        CollapsingToolbarLayout ctl = ((CollapsingToolbarLayout)findViewById(R.id.ctl_feed_better));
+        ctl.setTitle(entryName);
+//        设置字体颜色
+//        ctl.setCollapsedTitleTextColor(0);
+//        ctl.setExpandedTitleColor(11640438);
         //初始化浮层按钮
         findViewById(R.id.post_fab).setOnClickListener(new View.OnClickListener() {
             @Override

@@ -14,6 +14,7 @@
         app:layout_anchorGravity="top|center">
 
         <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/ctl_feed_better"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -37,17 +38,6 @@
                 android:elevation="4dp"
                 android:theme="@style/ThemeOverlay.AppCompat.Light"
                 app:layout_collapseMode="pin">
-
-                <TextView
-                    android:id="@+id/titleT"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:paddingEnd="58dp"
-                    android:text="活动点"
-                    android:textColor="#B19E76"
-                    android:textSize="18sp"
-                    android:visibility="gone" />
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>

@@ -50,5 +50,7 @@ dependencies {
     compile 'com.qiniu:qiniu-android-sdk:7.3.+'
     //服务端qiniu
     compile 'com.qiniu:qiniu-java-sdk:7.2.+'
+    //流式布局
+    compile 'com.hyman:flowlayout-lib:1.1.2'
     testCompile 'junit:junit:4.12'
 }

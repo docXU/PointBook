@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +21,9 @@ import com.debug.xxw.pointbook.model.NineGridModel;
 import com.debug.xxw.pointbook.model.Weibo;
 import com.debug.xxw.pointbook.net.RequestManager;
 import com.debug.xxw.pointbook.net.WeiboNetter;
+import com.zhy.view.flowlayout.FlowLayout;
+import com.zhy.view.flowlayout.TagAdapter;
+import com.zhy.view.flowlayout.TagFlowLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,10 +35,11 @@ import java.util.List;
 
 /**
  * Feed流
- *
+ * <p>
  * 活动点作为入口，解析id，地名
  * id作为索引获取流，地名作为视图窗口标题
  * todo：图片从服务器加载完之后缓存至本地，用户点击图片浏览时优先加载本地资源，可让用户手动清理缓存
+ *
  * @author xxw
  */
 public class FeedActivity extends AppCompatActivity {
@@ -51,10 +56,23 @@ public class FeedActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.weiboRecycler);
         WeiboNetter mWeiboNetter = new WeiboNetter(getApplicationContext());
 
-
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        final TagFlowLayout mTagFlowLayout = (TagFlowLayout) findViewById(R.id.id_flowlayout);
+        final LayoutInflater mInflater = getLayoutInflater();
+        String[] mVals = {"test", "second", "third"};
+        mTagFlowLayout.setAdapter(new TagAdapter<String>(mVals)
+        {
+            @Override
+            public View getView(FlowLayout parent, int position, String s)
+            {
+                TextView tv = (TextView) mInflater.inflate(R.layout.tag_tv,
+                        mTagFlowLayout, false);
+                tv.setText(s);
+                return tv;
+            }
+        });
 
         //解析bundle
         if (bundle == null) {
@@ -63,7 +81,7 @@ public class FeedActivity extends AppCompatActivity {
         final String entryId = bundle.getString("entry_id");
         final String entryName = bundle.getString("name");
 
-        CollapsingToolbarLayout ctl = ((CollapsingToolbarLayout)findViewById(R.id.ctl_feed_better));
+        CollapsingToolbarLayout ctl = ((CollapsingToolbarLayout) findViewById(R.id.ctl_feed_better));
         ctl.setTitle(entryName);
 //        设置字体颜色
 //        ctl.setCollapsedTitleTextColor(0);

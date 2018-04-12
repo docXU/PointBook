@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,10 +68,11 @@ public class FeedActivity extends AppCompatActivity {
             @Override
             public View getView(FlowLayout parent, int position, String s)
             {
-                TextView tv = (TextView) mInflater.inflate(R.layout.tag_tv,
+                LinearLayout container = (LinearLayout) mInflater.inflate(R.layout.tag_layout,
                         mTagFlowLayout, false);
+                TextView tv = (TextView) container.getChildAt(0);
                 tv.setText(s);
-                return tv;
+                return container;
             }
         });
 

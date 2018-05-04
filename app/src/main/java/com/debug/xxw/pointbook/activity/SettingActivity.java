@@ -48,28 +48,33 @@ public class SettingActivity extends AppCompatActivity {
         mListData = new ArrayList<>();
 
         HashMap<String, Object> map1 = new HashMap<>(2);
-        map1.put(FUN_NAME, "关于我");
-        map1.put(FUN_ICON, new LetterDrawable("A", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
+        map1.put(FUN_NAME, "关于");
+        map1.put(FUN_ICON, new LetterDrawable("M", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
         mListData.add(map1);
 
+        HashMap<String, Object> map2 = new HashMap<>(2);
+        map2.put(FUN_NAME, "关闭图层");
+        map2.put(FUN_ICON, new LetterDrawable("P", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
+        mListData.add(map2);
+
         HashMap<String, Object> map4 = new HashMap<>(2);
-        map4.put(FUN_NAME, "好奇心研究所");
-        map4.put(FUN_ICON, new LetterDrawable("D", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
+        map4.put(FUN_NAME, "调整活动范围");
+        map4.put(FUN_ICON, new LetterDrawable("R", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
         mListData.add(map4);
 
         HashMap<String, Object> map5 = new HashMap<>(2);
         map5.put(FUN_NAME, "我的消息");
-        map5.put(FUN_ICON, new LetterDrawable("E", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
+        map5.put(FUN_ICON, new LetterDrawable("T", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
         mListData.add(map5);
 
         HashMap<String, Object> map6 = new HashMap<>(2);
         map6.put(FUN_NAME, "个人中心");
-        map6.put(FUN_ICON, new LetterDrawable("F", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
+        map6.put(FUN_ICON, new LetterDrawable("S", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
         mListData.add(map6);
 
         HashMap<String, Object> map7 = new HashMap<>(2);
         map7.put(FUN_NAME, "首页");
-        map7.put(FUN_ICON, new LetterDrawable("G", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
+        map7.put(FUN_ICON, new LetterDrawable("I", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
         mListData.add(map7);
     }
 

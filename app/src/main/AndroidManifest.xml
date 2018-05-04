@@ -22,10 +22,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".activity.FeedActivity" android:theme="@style/MyTranslucentTheme"/>
-        <activity android:name=".activity.EditorActivity" android:label="发布" />
-        <activity android:name=".activity.SettingActivity" android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".activity.EditorActivity" android:label="发布" android:theme="@style/AppTheme"/>
+        <activity android:name=".activity.SettingActivity" android:theme="@style/MyTranslucentTheme"/>
 
         <!-- release 0050f84cadd37b603e40a86917839a31-->
         <!-- develop 01559bbd7e79fbffbaf241950cbc98cb-->

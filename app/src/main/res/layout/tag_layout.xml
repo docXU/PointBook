@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:paddingRight="1dp"
+    android:background="@drawable/tag_text_border"
     android:orientation="horizontal">
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/tag_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Demo Test"
-        android:background="@color/bar_grey_90"
-        android:layout_marginLeft="10dp" />
+        android:textColor="@color/black"
+        android:text="this show tag text" />
 
-    <Button
+    <ImageButton
         android:id="@+id/tag_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp" />
+        android:layout_width="17dp"
+        android:layout_height="17dp"
+        android:layout_weight="1"
+        android:layout_marginStart="10dp"
+        app:srcCompat="@drawable/addimg_1x" />
+
 </LinearLayout>

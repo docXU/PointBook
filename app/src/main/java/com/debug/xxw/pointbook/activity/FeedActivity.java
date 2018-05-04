@@ -1,19 +1,15 @@
 package com.debug.xxw.pointbook.activity;
 
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.debug.xxw.pointbook.R;
@@ -22,6 +18,7 @@ import com.debug.xxw.pointbook.model.NineGridModel;
 import com.debug.xxw.pointbook.model.Weibo;
 import com.debug.xxw.pointbook.net.RequestManager;
 import com.debug.xxw.pointbook.net.WeiboNetter;
+import com.debug.xxw.pointbook.viewmodel.FeedTagView;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
@@ -32,6 +29,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -43,6 +41,7 @@ import java.util.List;
  *
  * @author xxw
  */
+
 public class FeedActivity extends AppCompatActivity {
     private String tag = FeedActivity.class.getSimpleName();
     private RecyclerView recyclerView;
@@ -52,6 +51,7 @@ public class FeedActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        final Context mContext = this;
         setContentView(R.layout.activity_weibo_list);
         Bundle bundle = this.getIntent().getExtras();
         recyclerView = (RecyclerView) findViewById(R.id.weiboRecycler);
@@ -61,18 +61,36 @@ public class FeedActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         final TagFlowLayout mTagFlowLayout = (TagFlowLayout) findViewById(R.id.id_flowlayout);
-        final LayoutInflater mInflater = getLayoutInflater();
-        String[] mVals = {"test", "second", "third"};
-        mTagFlowLayout.setAdapter(new TagAdapter<String>(mVals)
-        {
+        final List<FeedTagView> mVal = new LinkedList<>();
+        List<String> mock = new LinkedList<>(Arrays.asList("猫奴", "BoyNextDoor", "海里捞火锅", "免费咖啡", "Tesla充电桩", "变态辣奶茶", "+"));
+
+        for (String s : mock) {
+            FeedTagView ftv = new FeedTagView(mContext, null);
+            ftv.getTv().setText(s);
+            mVal.add(ftv);
+        }
+
+        mTagFlowLayout.setOnTagClickListener(new TagFlowLayout.OnTagClickListener() {
             @Override
-            public View getView(FlowLayout parent, int position, String s)
-            {
-                LinearLayout container = (LinearLayout) mInflater.inflate(R.layout.tag_layout,
-                        mTagFlowLayout, false);
-                TextView tv = (TextView) container.getChildAt(0);
-                tv.setText(s);
-                return container;
+            public boolean onTagClick(View view, int position, FlowLayout parent) {
+                Toast.makeText(mContext, "tag click", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+        mTagFlowLayout.setAdapter(new TagAdapter<FeedTagView>(mVal) {
+            @Override
+            public View getView(final FlowLayout parent, int position, FeedTagView s) {
+                if (position == mVal.size() - 1) {
+                    s.displayBtn();
+                    s.getButton().setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(mContext, "add button clicked!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    s.hiddenTv();
+                }
+                return s;
             }
         });
 

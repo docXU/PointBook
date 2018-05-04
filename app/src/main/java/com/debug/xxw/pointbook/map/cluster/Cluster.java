@@ -1,4 +1,4 @@
-package com.debug.xxw.pointbook.cluster;
+package com.debug.xxw.pointbook.map.cluster;
 
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;

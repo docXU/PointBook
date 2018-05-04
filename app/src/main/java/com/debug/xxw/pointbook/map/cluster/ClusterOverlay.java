@@ -1,4 +1,4 @@
-package com.debug.xxw.pointbook.cluster;
+package com.debug.xxw.pointbook.map.cluster;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -85,10 +85,10 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
         if (clusterItems != null) {
             mClusterItems = clusterItems;
         } else {
-            mClusterItems = new ArrayList<ClusterItem>();
+            mClusterItems = new ArrayList<>();
         }
         mContext = context;
-        mClusters = new ArrayList<Cluster>();
+        mClusters = new ArrayList<>();
         this.mAMap = amap;
         mClusterSize = clusterSize;
         mPXInMeters = mAMap.getScalePerPixel();
@@ -205,8 +205,8 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
     }
 
     private AlphaAnimation mADDAnimation=new AlphaAnimation(0, 1);
-    //Animation markerAnimation = new ScaleAnimation(0, 1, 0, 1); //初始化生长效果动画
-    //markerAnimation.setDuration(2000);  //设置动画时间 单位毫秒
+//    Animation markerAnimation = new ScaleAnimation(0, 1, 0, 1); //初始化生长效果动画
+//    markerAnimation.setDuration(2000);  //设置动画时间 单位毫秒
     /**
      * 将单个聚合元素添加至地图显示
      *

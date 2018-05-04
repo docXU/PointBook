@@ -1,4 +1,4 @@
-package com.debug.xxw.pointbook.cluster;
+package com.debug.xxw.pointbook.map.cluster;
 
 import com.amap.api.maps.model.Marker;
 
@@ -19,5 +19,5 @@ public interface ClusterClickListener{
          * @param clusterItems
          *            聚合点所包含的元素
          */
-        public void onClick(Marker marker, List<ClusterItem> clusterItems);
+        void onClick(Marker marker, List<ClusterItem> clusterItems);
 }

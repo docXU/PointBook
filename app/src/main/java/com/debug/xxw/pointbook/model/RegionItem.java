@@ -1,7 +1,7 @@
 package com.debug.xxw.pointbook.model;
 
 import com.amap.api.maps.model.LatLng;
-import com.debug.xxw.pointbook.cluster.ClusterItem;
+import com.debug.xxw.pointbook.map.cluster.ClusterItem;
 
 import java.sql.Date;
 

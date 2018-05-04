@@ -24,7 +24,6 @@ import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.Poi;
 import com.debug.xxw.pointbook.R;
 import com.debug.xxw.pointbook.map.MapController;
-import com.debug.xxw.pointbook.map.MarkerController;
 import com.debug.xxw.pointbook.utils.ElasticOutInterpolator;
 import com.debug.xxw.pointbook.utils.PermissionUtil;
 import com.debug.xxw.pointbook.viewmodel.HintDialogFragment;
@@ -35,7 +34,6 @@ import com.debug.xxw.pointbook.viewmodel.HintDialogFragment;
 public class MainActivity extends AppCompatActivity implements HintDialogFragment.DialogFragmentCallback {
 
     MapController mMapController;
-    MarkerController mMarkerController;
     MapView mMapView;
     FloatingActionButton mFab;
 

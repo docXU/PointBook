@@ -38,10 +38,10 @@ import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
-import com.debug.xxw.pointbook.cluster.ClusterClickListener;
-import com.debug.xxw.pointbook.cluster.ClusterItem;
-import com.debug.xxw.pointbook.cluster.ClusterOverlay;
-import com.debug.xxw.pointbook.cluster.ClusterRender;
+import com.debug.xxw.pointbook.map.cluster.ClusterClickListener;
+import com.debug.xxw.pointbook.map.cluster.ClusterItem;
+import com.debug.xxw.pointbook.map.cluster.ClusterOverlay;
+import com.debug.xxw.pointbook.map.cluster.ClusterRender;
 import com.debug.xxw.pointbook.activity.FeedActivity;
 import com.debug.xxw.pointbook.model.RegionItem;
 import com.debug.xxw.pointbook.R;
@@ -74,7 +74,7 @@ public class MapController implements ClusterRender, ClusterClickListener {
     private ClusterOverlay mClusterOverlay;
     private final Context mainContext;
     private Activity mainActivity;
-    private float clusterRadius = 50;
+    private float clusterRadius = 35;
     /**
      * 活动范围（公里）
      */
@@ -160,7 +160,7 @@ public class MapController implements ClusterRender, ClusterClickListener {
             }
 
             /***
-             * 转换服务器的返回结果为聚合点集
+             * 转换服务器的返回结果为可聚合点集
              * @param result json字符串
              * @return 聚合点集
              */
@@ -172,12 +172,11 @@ public class MapController implements ClusterRender, ClusterClickListener {
                     Log.e(TAG, "违法的json返回字符串");
                 }
 
-                List<ClusterItem> items = new ArrayList<ClusterItem>();
+                List<ClusterItem> items = new ArrayList<>();
 
                 if (ja != null) {
                     int itemCount = ja.length();
                     for (int i = 0; i < itemCount; i++) {
-
                         try {
                             JSONObject jo = ja.getJSONObject(i);
 
@@ -200,7 +199,7 @@ public class MapController implements ClusterRender, ClusterClickListener {
 
             @Override
             public void onReqFailed(String errorMsg) {
-                Log.e("testAPI", errorMsg);
+                Log.e("queryMakerCallback", errorMsg);
             }
         });
 
@@ -396,6 +395,11 @@ public class MapController implements ClusterRender, ClusterClickListener {
         }
     }
 
+    /**
+     * 聚合点的样式
+     * @param clusterNum
+     * @return
+     */
     @Override
     public Drawable getDrawAble(int clusterNum) {
         final int onlyOne = 1;

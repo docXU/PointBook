@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -86,6 +85,8 @@ public class MapController implements ClusterRender, ClusterClickListener {
     private LinearLayout rbl;
     private Circle reportRegion;
     private ReportPoint mReportPoint;
+    //只是为了应用首开的时候调整镜头至合适大小。
+    private boolean needMoveToCenter = true;
 
     public MapController(Context mMainContext, Activity mMainActivity, MapView mv, Bundle savedInstanceState) {
         mainActivity = mMainActivity;
@@ -130,7 +131,10 @@ public class MapController implements ClusterRender, ClusterClickListener {
             public void onMyLocationChange(Location location) {
 
                 mLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                mAMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLocation, 13f));
+                if (needMoveToCenter) {
+                    needMoveToCenter = false;
+                    mAMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLocation, 13f));
+                }
 
                 if (reportRegion != null) {
                     reportRegion.setCenter(mLocation);
@@ -248,9 +252,9 @@ public class MapController implements ClusterRender, ClusterClickListener {
 
     public void beginLocation() {
         MyLocationStyle myLocationStyle = new MyLocationStyle();
-        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);
-        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(mainContext.getResources(),
-                R.drawable.navi_map_gps_locked)));
+        myLocationStyle.radiusFillColor(Color.parseColor("#6bbbec"))
+                .myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);
+//        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(mainContext.getResources(), R.drawable.navi_map_gps_locked)));
         mAMap.setMyLocationStyle(myLocationStyle);
         // 设置默认定位按钮是否显示，非必需设置。
         mAMap.getUiSettings().setMyLocationButtonEnabled(true);
@@ -397,6 +401,7 @@ public class MapController implements ClusterRender, ClusterClickListener {
 
     /**
      * 聚合点的样式
+     *
      * @param clusterNum
      * @return
      */

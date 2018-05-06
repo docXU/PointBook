@@ -20,6 +20,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amap.api.maps.AMap;
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements HintDialogFragmen
     MapView mMapView;
     FloatingActionButton mFab;
     RecommendSearchFragment searchFragment;
+    RelativeLayout searchStatusBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,17 @@ public class MainActivity extends AppCompatActivity implements HintDialogFragmen
         searchFragment = new RecommendSearchFragment();
         toolbar.setOnMenuItemClickListener(this);
         searchFragment.setOnSearchClickListener(this);
+
+        //隐藏搜索状态栏
+        searchStatusBar = (RelativeLayout) findViewById(R.id.search_status_bar);
+        (searchStatusBar.getChildAt(1)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMapController.closeSearchMarkerOverlay();
+                mMapController.getmClusterOverlay().showOverlay();
+                searchStatusBar.setVisibility(View.GONE);
+            }
+        });
 
         //初始化地图视图和地图交互事件
         mMapView = (MapView) findViewById(R.id.map);
@@ -100,11 +114,18 @@ public class MainActivity extends AppCompatActivity implements HintDialogFragmen
         });
     }
 
+    private void ShowAndSetSearchBar(String keyword) {
+        searchStatusBar.setVisibility(View.VISIBLE);
+        TextView tv = (TextView) searchStatusBar.getChildAt(0);
+        tv.setText("正在浏览：" + keyword + " 相关.");
+    }
+
     @Override
     public void OnSearchClick(String keyword) {
-        Toast.makeText(MainActivity.this, ":" + keyword , Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, ":" + keyword, Toast.LENGTH_SHORT).show();
         //todo: 显示相关的cluster，做出状态栏表示当前搜索词。
-        ClusterOverlay clusterOverlay = mMapController.getmClusterOverlay();
+
+        ShowAndSetSearchBar(keyword);
     }
 
     @Override

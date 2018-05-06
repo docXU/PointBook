@@ -18,6 +18,33 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"/>
 
+    <RelativeLayout
+        android:id="@+id/search_status_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/search_status_layout_corners"
+        android:padding="5dp"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#efefef"
+            android:layout_centerVertical="true"
+            android:text="正在浏览：keyword 相关."/>
+
+        <ImageButton
+            android:id="@+id/btn_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/ic_close_black"
+            android:padding="10dp"/>
+    </RelativeLayout>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/more_fab"
         android:layout_width="50dp"

@@ -73,6 +73,7 @@ public class MapController implements ClusterRender, ClusterClickListener {
 
     private Map<Integer, Drawable> mBackDrawAbles = new HashMap<>();
     private ClusterOverlay mClusterOverlay;
+    private ClusterOverlay searchResultOverlay;
     private final Context mainContext;
     private Activity mainActivity;
     private float clusterRadius = 35;
@@ -171,7 +172,7 @@ public class MapController implements ClusterRender, ClusterClickListener {
                     reportRegion = mAMap.addCircle(new CircleOptions().center(mLocation).radius(1000 * activityScope).strokeWidth(5));
                 }
                 //当两次定位距离大于100m的时候重启拉取数据
-                if (lastLocation != null && location.distanceTo(lastLocation) > 100){
+                if (lastLocation != null && location.distanceTo(lastLocation) > 100) {
                     //发起异步请求获取周围的活动点集
                     mMarkerNetter.queryMarker(location, activityScope);
                 }
@@ -191,7 +192,7 @@ public class MapController implements ClusterRender, ClusterClickListener {
                             mainContext);
                     mClusterOverlay.setClusterRenderer(MapController.this);
                     mClusterOverlay.setOnClusterClickListener(MapController.this);
-                }else{
+                } else {
                     mClusterOverlay.assignClusters();
                 }
             }
@@ -360,6 +361,15 @@ public class MapController implements ClusterRender, ClusterClickListener {
         reportMarker = null;
         mMarkerNetter = null;
         System.gc();
+    }
+
+    /**
+     * 关闭搜索结果图层
+     */
+    public void closeSearchMarkerOverlay() {
+        if (searchResultOverlay != null) {
+            searchResultOverlay.onDestroy();
+        }
     }
 
 

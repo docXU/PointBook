@@ -3,15 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp">
+    android:background="@color/colorPrimary">
 
     <com.debug.xxw.pointbook.viewmodel.SettingView
         android:id="@+id/setting_view"
+        android:layout_margin="20dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/color_green"
-        android:layout_marginTop="@dimen/activity_vertical_margin">
+        android:layout_height="match_parent">
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/back_fab"

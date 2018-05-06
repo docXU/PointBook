@@ -14,7 +14,10 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Toast;
@@ -24,23 +27,36 @@ import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.Poi;
 import com.debug.xxw.pointbook.R;
 import com.debug.xxw.pointbook.map.MapController;
+import com.debug.xxw.pointbook.map.cluster.ClusterOverlay;
 import com.debug.xxw.pointbook.utils.ElasticOutInterpolator;
 import com.debug.xxw.pointbook.utils.PermissionUtil;
 import com.debug.xxw.pointbook.viewmodel.HintDialogFragment;
+import com.debug.xxw.pointbook.viewmodel.RecommendSearchFragment;
+import com.wyt.searchbox.SearchFragment;
+import com.wyt.searchbox.custom.IOnSearchClickListener;
 
 /**
  * @author xxw
  */
-public class MainActivity extends AppCompatActivity implements HintDialogFragment.DialogFragmentCallback {
+public class MainActivity extends AppCompatActivity implements HintDialogFragment.DialogFragmentCallback, Toolbar.OnMenuItemClickListener, IOnSearchClickListener {
 
+    Toolbar toolbar;
     MapController mMapController;
     MapView mMapView;
     FloatingActionButton mFab;
+    RecommendSearchFragment searchFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.app_bar_main);
+        setContentView(R.layout.activity_main);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.app_name);
+        setSupportActionBar(toolbar);
+        searchFragment = new RecommendSearchFragment();
+        toolbar.setOnMenuItemClickListener(this);
+        searchFragment.setOnSearchClickListener(this);
 
         //初始化地图视图和地图交互事件
         mMapView = (MapView) findViewById(R.id.map);
@@ -82,6 +98,31 @@ public class MainActivity extends AppCompatActivity implements HintDialogFragmen
                 anim.start();
             }
         });
+    }
+
+    @Override
+    public void OnSearchClick(String keyword) {
+        Toast.makeText(MainActivity.this, ":" + keyword , Toast.LENGTH_SHORT).show();
+        //todo: 显示相关的cluster，做出状态栏表示当前搜索词。
+        ClusterOverlay clusterOverlay = mMapController.getmClusterOverlay();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                searchFragment.show(getSupportFragmentManager(), SearchFragment.TAG);
+                break;
+            default:
+                break;
+        }
+        return true;
     }
 
     class ButtonDropDownAnimationListener implements Animator.AnimatorListener {
@@ -135,17 +176,17 @@ public class MainActivity extends AppCompatActivity implements HintDialogFragmen
             case PermissionUtil.STORAGE_PERMISSION_CODE: {
                 if (grantResults.length <= 0
                         || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                            Toast.makeText(MainActivity.this, "存储权限被拒绝", Toast.LENGTH_SHORT).show();
-                            Log.i("MY", "定位权限被拒绝");
-                            if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                                DialogFragment newFragment = HintDialogFragment.newInstance(R.string.storage_description_title,
-                                        R.string.storage_description_why_we_need_the_permission,
-                                        requestCode);
-                                newFragment.show(getFragmentManager(), HintDialogFragment.class.getSimpleName());
-                                Log.i("MY", "false 勾选了不再询问，并引导用户去设置中手动设置");
-                            }
-                            return;
-                        }
+                    Toast.makeText(MainActivity.this, "存储权限被拒绝", Toast.LENGTH_SHORT).show();
+                    Log.i("MY", "定位权限被拒绝");
+                    if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                        DialogFragment newFragment = HintDialogFragment.newInstance(R.string.storage_description_title,
+                                R.string.storage_description_why_we_need_the_permission,
+                                requestCode);
+                        newFragment.show(getFragmentManager(), HintDialogFragment.class.getSimpleName());
+                        Log.i("MY", "false 勾选了不再询问，并引导用户去设置中手动设置");
+                    }
+                    return;
+                }
             }
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -182,6 +223,7 @@ public class MainActivity extends AppCompatActivity implements HintDialogFragmen
 
     @Override
     public void onBackPressed() {
+        //TODO：需连按两次返回建才可退出
         super.onBackPressed();
     }
 
@@ -191,7 +233,7 @@ public class MainActivity extends AppCompatActivity implements HintDialogFragmen
         mMapView.onResume();
         if (null != mFab && mFab.getVisibility() == View.GONE) {
             mFab.setVisibility(View.VISIBLE);
-            ValueAnimator anim = ObjectAnimator.ofFloat(mFab, "translationY", mFab.getHeight()*2, 0);
+            ValueAnimator anim = ObjectAnimator.ofFloat(mFab, "translationY", mFab.getHeight() * 2, 0);
             anim.setDuration(500);
             anim.setInterpolator(new ElasticOutInterpolator());
             anim.start();

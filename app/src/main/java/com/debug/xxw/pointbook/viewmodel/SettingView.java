@@ -138,7 +138,6 @@ public class SettingView extends ViewGroup {
         LinearLayout.LayoutParams l = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mHeaderView.setLayoutParams(l);
         mHeaderView.setPadding(0, calPxFromDp(10), 0, calPxFromDp(10));
-        mHeaderView.setBackgroundColor(0xff554433);
 
         SearchView mSearchView = new SearchView(context);
         l = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);

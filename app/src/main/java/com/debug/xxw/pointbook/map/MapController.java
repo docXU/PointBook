@@ -56,6 +56,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -223,8 +224,18 @@ public class MapController implements ClusterRender, ClusterClickListener {
                             String sid = jo.getString("sid");
                             String title = jo.getString("title");
 
+                            //TODO:解析tags
+//                            //获取tag列表
+//                            List<String> tags = new LinkedList<>();
+//                            JSONArray tagArray = jo.getJSONArray("tags");
+//                            int tagSize = tagArray.length();
+//                            for (int j = 0; j < tagSize; j++) {
+//                                tags.add(jo.getString(""+j));
+//                            }
+
                             LatLng latLng = new LatLng(lat, lon, false);
                             RegionItem regionItem = new RegionItem(sid, latLng, title);
+//                            regionItem.setTags(tags);
                             items.add(regionItem);
                         } catch (JSONException je) {
                             Log.e(TAG, "json对象不存在某个键");
@@ -364,9 +375,25 @@ public class MapController implements ClusterRender, ClusterClickListener {
     }
 
     /**
+     * 显示搜索结果图层
+     * @param list
+     */
+    public void openSearchResultOverlay(List<ClusterItem> list){
+        if (null != searchResultOverlay) {
+            searchResultOverlay.onDestroy();
+        }
+
+        searchResultOverlay = new ClusterOverlay(mAMap, list,
+                dp2px(mainContext, clusterRadius),
+                mainContext);
+        searchResultOverlay.setClusterRenderer(MapController.this);
+        searchResultOverlay.setOnClusterClickListener(MapController.this);
+    }
+
+    /**
      * 关闭搜索结果图层
      */
-    public void closeSearchMarkerOverlay() {
+    public void closeSearchResultOverlay() {
         if (searchResultOverlay != null) {
             searchResultOverlay.onDestroy();
         }

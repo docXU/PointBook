@@ -29,13 +29,18 @@ import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.Poi;
 import com.debug.xxw.pointbook.R;
 import com.debug.xxw.pointbook.map.MapController;
+import com.debug.xxw.pointbook.map.cluster.ClusterItem;
 import com.debug.xxw.pointbook.map.cluster.ClusterOverlay;
+import com.debug.xxw.pointbook.model.RegionItem;
 import com.debug.xxw.pointbook.utils.ElasticOutInterpolator;
 import com.debug.xxw.pointbook.utils.PermissionUtil;
 import com.debug.xxw.pointbook.viewmodel.HintDialogFragment;
 import com.debug.xxw.pointbook.viewmodel.RecommendSearchFragment;
 import com.wyt.searchbox.SearchFragment;
 import com.wyt.searchbox.custom.IOnSearchClickListener;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author xxw
@@ -66,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements HintDialogFragmen
         (searchStatusBar.getChildAt(1)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mMapController.closeSearchMarkerOverlay();
+                mMapController.closeSearchResultOverlay();
                 mMapController.getmClusterOverlay().showOverlay();
                 searchStatusBar.setVisibility(View.GONE);
             }
@@ -122,10 +127,38 @@ public class MainActivity extends AppCompatActivity implements HintDialogFragmen
 
     @Override
     public void OnSearchClick(String keyword) {
-        Toast.makeText(MainActivity.this, ":" + keyword, Toast.LENGTH_SHORT).show();
+
         //todo: 显示相关的cluster，做出状态栏表示当前搜索词。
 
-        ShowAndSetSearchBar(keyword);
+        List<ClusterItem> clusters = mMapController.getmClusterOverlay().getmClusterItems();
+        List<ClusterItem> filteredClusters = new LinkedList<>();
+
+        for (ClusterItem ci : clusters) {
+            RegionItem ri = (RegionItem) ci;
+
+            //先搜索一下title，相关则加入
+            if (ri.getTitle().contains(keyword)) {
+                filteredClusters.add((ClusterItem) ri.clone());
+                continue;
+            }
+
+            List<String> tags = ri.getTags();
+            if (tags != null){
+                for (String tag : tags) {
+                    if (tag.contains(keyword)) {
+                        filteredClusters.add((ClusterItem) ri.clone());
+                    }
+                }
+            }
+        }
+
+        if (0 == filteredClusters.size()) {
+            Toast.makeText(MainActivity.this, "没有相关内容 试试别的吧.", Toast.LENGTH_LONG).show();
+        } else {
+            ShowAndSetSearchBar(keyword);
+            mMapController.getmClusterOverlay().hiddenOverlay();
+            mMapController.openSearchResultOverlay(filteredClusters);
+        }
     }
 
     @Override

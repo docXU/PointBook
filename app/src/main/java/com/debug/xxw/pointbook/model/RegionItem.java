@@ -4,32 +4,48 @@ import com.amap.api.maps.model.LatLng;
 import com.debug.xxw.pointbook.map.cluster.ClusterItem;
 
 import java.sql.Date;
+import java.util.List;
 
-/**
- * Created by yiyi.qi on 16/10/10.
- */
-
-public class RegionItem implements ClusterItem {
+public class RegionItem implements ClusterItem, Cloneable {
     private LatLng mLatLng;
     private String mTitle;
     private String mId;
+    private List<String> tags = null;
+
     public RegionItem(String id, LatLng latLng, String title) {
-        mId =id;
-        mLatLng=latLng;
-        mTitle=title;
+        mId = id;
+        mLatLng = latLng;
+        mTitle = title;
     }
 
     @Override
     public LatLng getPosition() {
         return mLatLng;
     }
-    public String getTitle(){
+
+    public String getTitle() {
         return mTitle;
     }
 
-    public Date getCreateTime(){
-        return null;
+    public List<String> getTags() {
+        return tags;
     }
 
-    public String getId() { return mId; }
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    public String getId() {
+        return mId;
+    }
+
+    @Override
+    public Object clone() {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

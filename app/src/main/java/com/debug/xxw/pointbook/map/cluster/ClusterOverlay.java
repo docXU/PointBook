@@ -428,4 +428,14 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
             }
         }
     }
+
+
+    public List<ClusterItem> getmClusterItems() {
+        return mClusterItems;
+    }
+
+    public void setmClusterItems(List<ClusterItem> mClusterItems) {
+        mIsCanceled = true;
+        this.mClusterItems = mClusterItems;
+    }
 }

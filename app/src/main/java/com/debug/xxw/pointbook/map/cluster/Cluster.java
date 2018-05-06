@@ -13,11 +13,9 @@ import java.util.List;
 
 public class Cluster {
 
-
     private LatLng mLatLng;
     private List<ClusterItem> mClusterItems;
     private Marker mMarker;
-
 
     Cluster(LatLng latLng) {
         mLatLng = latLng;

@@ -22,8 +22,8 @@ import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.animation.AlphaAnimation;
 import com.amap.api.maps.model.animation.Animation;
+import com.amap.api.maps.model.animation.ScaleAnimation;
 import com.debug.xxw.pointbook.R;
-import com.debug.xxw.pointbook.map.ActivityPointClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,6 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
     private List<Cluster> mClusters;
     private int mClusterSize;
     private ClusterClickListener mClusterClickListener;
-    private ActivityPointClickListener mActivityPointClickListener;
     private ClusterRender mClusterRender;
     private List<Marker> mAddMarkers = new ArrayList<Marker>();
     private double mClusterDistance;
@@ -49,21 +48,9 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
     private HandlerThread mSignClusterThread = new HandlerThread("calculateCluster");
     private Handler mMarkerhandler;
     private Handler mSignClusterHandler;
+    private boolean hidden;
     private float mPXInMeters;
     private boolean mIsCanceled = false;
-
-    /**
-     * 构造函数
-     *
-     * @param amap
-     * @param clusterSize 聚合范围的大小（指点像素单位距离内的点会聚合到一个点显示）
-     * @param context
-     */
-    public ClusterOverlay(AMap amap, int clusterSize, Context context) {
-        this(amap, null, clusterSize, context);
-
-
-    }
 
     /**
      * 构造函数,批量添加聚合元素时,调用此构造函数
@@ -87,23 +74,28 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
         } else {
             mClusterItems = new ArrayList<>();
         }
+        hidden = false;
         mContext = context;
         mClusters = new ArrayList<>();
         this.mAMap = amap;
         mClusterSize = clusterSize;
-        mPXInMeters = mAMap.getScalePerPixel();
-        mClusterDistance = mPXInMeters * mClusterSize;
         amap.setOnMarkerClickListener(this);
         initThreadHandler();
         assignClusters();
     }
 
-    //处理聚合信息
-    public void assignCluster()
-    {
-        mPXInMeters = mAMap.getScalePerPixel();
-        mClusterDistance = mPXInMeters * mClusterSize;
+
+    public void showOverlay() {
+        hidden = false;
         assignClusters();
+    }
+
+    public void hiddenOverlay() {
+        for (Marker m :mAddMarkers){
+            m.remove();
+        }
+        mAddMarkers.clear();
+        hidden = true;
     }
 
     /**
@@ -114,16 +106,6 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
     public void setOnClusterClickListener(
             ClusterClickListener clusterClickListener) {
         mClusterClickListener = clusterClickListener;
-    }
-
-    /**
-     * 设置活动点的点击事件
-     *
-     * @param activityPointClickListener
-     */
-    public void setOnActivityPointClickListener(
-            ActivityPointClickListener activityPointClickListener) {
-        mActivityPointClickListener = activityPointClickListener;
     }
 
     /**
@@ -174,9 +156,9 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
         if (mClusterClickListener == null) {
             return true;
         }
-        Cluster cluster= (Cluster) arg0.getObject();
-        if(cluster!=null){
-            mClusterClickListener.onClick(arg0,cluster.getClusterItems());
+        Cluster cluster = (Cluster) arg0.getObject();
+        if (cluster != null) {
+            mClusterClickListener.onClick(arg0, cluster.getClusterItems());
             return true;
         }
 
@@ -188,25 +170,20 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
      * 将聚合元素添加至地图上
      */
     private void addClusterToMap(List<Cluster> clusters) {
-
-        ArrayList<Marker> removeMarkers = new ArrayList<>();
-        removeMarkers.addAll(mAddMarkers);
-        AlphaAnimation removeAnimation=new AlphaAnimation(1, 0);
-        MyAnimationListener myAnimationListener=new MyAnimationListener(removeMarkers);
-        for (Marker marker : removeMarkers) {
-            marker.setAnimation(removeAnimation);
-            marker.setAnimationListener(myAnimationListener);
-            marker.startAnimation();
+        for (Marker marker : mAddMarkers) {
+            marker.remove();
         }
+        mAddMarkers.clear();
 
         for (Cluster cluster : clusters) {
             addSingleClusterToMap(cluster);
         }
     }
 
-    private AlphaAnimation mADDAnimation=new AlphaAnimation(0, 1);
-//    Animation markerAnimation = new ScaleAnimation(0, 1, 0, 1); //初始化生长效果动画
-//    markerAnimation.setDuration(2000);  //设置动画时间 单位毫秒
+    private AlphaAnimation mADDAnimation = new AlphaAnimation(0, 1);
+//    ScaleAnimation mADDAnimation = new ScaleAnimation(0, 1, 0, 1); //初始化生长效果动画
+//    setDuration(2000);  //设置动画时间 单位毫秒
+
     /**
      * 将单个聚合元素添加至地图显示
      *
@@ -216,6 +193,7 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
         LatLng latlng = cluster.getCenterLatLng();
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.anchor(0.5f, 0.5f)
+                .title("test")
                 .icon(getBitmapDes(cluster.getClusterCount())).position(latlng);
         Marker marker = mAMap.addMarker(markerOptions);
         marker.setAnimation(mADDAnimation);
@@ -224,8 +202,6 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
         mAddMarkers.add(marker);
 
     }
-
-
 
     private void calculateClusters() {
         mIsCanceled = false;
@@ -237,7 +213,7 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
             }
             LatLng latlng = clusterItem.getPosition();
             if (visibleBounds.contains(latlng)) {
-                Cluster cluster = getCluster(latlng,mClusters);
+                Cluster cluster = getCluster(latlng, mClusters);
                 if (cluster != null) {
                     cluster.addClusterItem(clusterItem);
                 } else {
@@ -245,12 +221,11 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
                     mClusters.add(cluster);
                     cluster.addClusterItem(clusterItem);
                 }
-
             }
         }
 
         //复制一份数据，规避同步
-        List<Cluster> clusters = new ArrayList<Cluster>();
+        List<Cluster> clusters = new ArrayList<>();
         clusters.addAll(mClusters);
         Message message = Message.obtain();
         message.what = MarkerHandler.ADD_CLUSTER_LIST;
@@ -262,10 +237,17 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
     }
 
     /**
-     * 对点进行聚合
+     * 启动计算聚合情况
      */
-    private void assignClusters() {
+    public void assignClusters() {
+        if (hidden) {
+            return;
+        }
         mIsCanceled = true;
+
+        mPXInMeters = mAMap.getScalePerPixel();
+        mClusterDistance = mPXInMeters * mClusterSize;
+
         mSignClusterHandler.removeMessages(SignClusterHandler.CALCULATE_CLUSTER);
         mSignClusterHandler.sendEmptyMessage(SignClusterHandler.CALCULATE_CLUSTER);
     }
@@ -281,7 +263,7 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
         if (!visibleBounds.contains(latlng)) {
             return;
         }
-        Cluster cluster = getCluster(latlng,mClusters);
+        Cluster cluster = getCluster(latlng, mClusters);
         if (cluster != null) {
             cluster.addClusterItem(clusterItem);
             Message message = Message.obtain();
@@ -290,10 +272,7 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
             message.obj = cluster;
             mMarkerhandler.removeMessages(MarkerHandler.UPDATE_SINGLE_CLUSTER);
             mMarkerhandler.sendMessageDelayed(message, 5);
-
-
         } else {
-
             cluster = new Cluster(latlng);
             mClusters.add(cluster);
             cluster.addClusterItem(clusterItem);
@@ -301,18 +280,17 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
             message.what = MarkerHandler.ADD_SINGLE_CLUSTER;
             message.obj = cluster;
             mMarkerhandler.sendMessage(message);
-
         }
     }
 
     /**
      * 根据一个点获取是否可以依附的聚合点，没有则返回null
      *
-     * @param latLng 经纬度
+     * @param latLng   经纬度
      * @param clusters 点集
      * @return Cluster
      */
-    private Cluster getCluster(LatLng latLng,List<Cluster> clusters) {
+    private Cluster getCluster(LatLng latLng, List<Cluster> clusters) {
         for (Cluster cluster : clusters) {
             LatLng clusterCenterPoint = cluster.getCenterLatLng();
             double distance = AMapUtils.calculateLineDistance(latLng, clusterCenterPoint);
@@ -355,8 +333,8 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
      */
     private void updateCluster(Cluster cluster) {
 
-            Marker marker = cluster.getMarker();
-            marker.setIcon(getBitmapDes(cluster.getClusterCount()));
+        Marker marker = cluster.getMarker();
+        marker.setIcon(getBitmapDes(cluster.getClusterCount()));
 
 
     }
@@ -368,7 +346,7 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
      * marker渐变动画，动画结束后将Marker删除
      */
     class MyAnimationListener implements Animation.AnimationListener {
-        private List<Marker> mRemoveMarkers ;
+        private List<Marker> mRemoveMarkers;
 
         MyAnimationListener(List<Marker> removeMarkers) {
             mRemoveMarkers = removeMarkers;
@@ -381,7 +359,7 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
 
         @Override
         public void onAnimationEnd() {
-            for(Marker marker:mRemoveMarkers){
+            for (Marker marker : mRemoveMarkers) {
                 marker.remove();
             }
             mRemoveMarkers.clear();
@@ -408,18 +386,16 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
 
             switch (message.what) {
                 case ADD_CLUSTER_LIST:
-                    List<Cluster> clusters = (List<Cluster>) message.obj;
-                    addClusterToMap(clusters);
+                    addClusterToMap((List<Cluster>) message.obj);
                     break;
                 case ADD_SINGLE_CLUSTER:
-                    Cluster cluster = (Cluster) message.obj;
-                    addSingleClusterToMap(cluster);
+                    addSingleClusterToMap((Cluster) message.obj);
                     break;
                 case UPDATE_SINGLE_CLUSTER:
-                    Cluster updateCluster = (Cluster) message.obj;
-                    updateCluster(updateCluster);
+                    updateCluster((Cluster) message.obj);
                     break;
-                    default:break;
+                default:
+                    break;
             }
         }
     }
@@ -444,10 +420,11 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
                 case CALCULATE_SINGLE_CLUSTER:
                     ClusterItem item = (ClusterItem) message.obj;
                     mClusterItems.add(item);
-                    Log.i("yiyi.qi","calculate single cluster");
+                    Log.i("yiyi.qi", "calculate single cluster");
                     calculateSingleCluster(item);
                     break;
-                    default:break;
+                default:
+                    break;
             }
         }
     }

@@ -1,10 +1,12 @@
 package com.debug.xxw.pointbook.map;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -80,24 +82,51 @@ public class MapController implements ClusterRender, ClusterClickListener {
     private int activityScope = 10;
     private LatLng mLocation;
 
-
     private Marker reportMarker;
     private LinearLayout rbl;
     private Circle reportRegion;
     private ReportPoint mReportPoint;
     //只是为了应用首开的时候调整镜头至合适大小。
     private boolean needMoveToCenter = true;
+    private Location lastLocation = null;
 
+    @SuppressLint("SdCardPath")
     public MapController(Context mMainContext, Activity mMainActivity, MapView mv, Bundle savedInstanceState) {
         mainActivity = mMainActivity;
         mainContext = mMainContext;
         mMarkerNetter = new MarkerNetter(mainContext);
         mv.onCreate(savedInstanceState);
         mAMap = mv.getMap();
-        init();
+        mAMap.setCustomMapStylePath("/sdcard/Pointbook/custom_map");
+        mAMap.setMapCustomEnable(true);
+
+        rbl = mainActivity.findViewById(R.id.report_button_Layout);
+        rbl.setVisibility(View.INVISIBLE);
+
+        listenerInit();
     }
 
-    private void init() {
+    private void listenerInit() {
+        Button reportSubmit = mainActivity.findViewById(R.id.reportSubmit);
+        Button reportCancel = mainActivity.findViewById(R.id.cancle);
+        reportSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reportDialogHidden();
+                inputTitleDialog();
+            }
+        });
+        reportCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mReportPoint = null;
+                reportMarker.remove();
+                reportMarker = null;
+                reportDialogHidden();
+                Toast.makeText(mainContext, "你取消了申报", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         mAMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
@@ -107,7 +136,7 @@ public class MapController implements ClusterRender, ClusterClickListener {
             public void onCameraChangeFinish(CameraPosition cameraPosition) {
                 remenberReportLocation(cameraPosition.target);
                 if (null != mClusterOverlay) {
-                    mClusterOverlay.assignCluster();
+                    mClusterOverlay.assignClusters();
                 }
             }
         });
@@ -129,11 +158,11 @@ public class MapController implements ClusterRender, ClusterClickListener {
         mAMap.setOnMyLocationChangeListener(new AMap.OnMyLocationChangeListener() {
             @Override
             public void onMyLocationChange(Location location) {
-
                 mLocation = new LatLng(location.getLatitude(), location.getLongitude());
                 if (needMoveToCenter) {
                     needMoveToCenter = false;
                     mAMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLocation, 13f));
+                    mMarkerNetter.queryMarker(location, activityScope);
                 }
 
                 if (reportRegion != null) {
@@ -141,26 +170,30 @@ public class MapController implements ClusterRender, ClusterClickListener {
                 } else {
                     reportRegion = mAMap.addCircle(new CircleOptions().center(mLocation).radius(1000 * activityScope).strokeWidth(5));
                 }
+                //当两次定位距离大于100m的时候重启拉取数据
+                if (lastLocation != null && location.distanceTo(lastLocation) > 100){
+                    //发起异步请求获取周围的活动点集
+                    mMarkerNetter.queryMarker(location, activityScope);
+                }
 
-                //发起异步请求获取周围的活动点集
-                mMarkerNetter.queryMarker(location, activityScope);
+                lastLocation = location;
             }
         });
 
+        // 网络
         mMarkerNetter.setMarkerRequestCallBack(new RequestManager.ReqCallBack() {
             @Override
             public void onReqSuccess(Object result) {
-                final List<ClusterItem> markerList = parseResultToMarkerList(result);
-                mainActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mClusterOverlay = new ClusterOverlay(mAMap, markerList,
-                                dp2px(mainContext, clusterRadius),
-                                mainContext);
-                        mClusterOverlay.setClusterRenderer(MapController.this);
-                        mClusterOverlay.setOnClusterClickListener(MapController.this);
-                    }
-                });
+                List<ClusterItem> markerList = parseResultToMarkerList(result);
+                if (null == mClusterOverlay) {
+                    mClusterOverlay = new ClusterOverlay(mAMap, markerList,
+                            dp2px(mainContext, clusterRadius),
+                            mainContext);
+                    mClusterOverlay.setClusterRenderer(MapController.this);
+                    mClusterOverlay.setOnClusterClickListener(MapController.this);
+                }else{
+                    mClusterOverlay.assignClusters();
+                }
             }
 
             /***
@@ -214,7 +247,6 @@ public class MapController implements ClusterRender, ClusterClickListener {
                 Toast.makeText(mainContext, "上报直接通过~", Toast.LENGTH_LONG).show();
                 if (mClusterOverlay != null) {
                     mClusterOverlay.addClusterItem(new RegionItem((String) result, mReportPoint.getLocation(), mReportPoint.getTitle()));
-                    //mClusterOverlay.assignCluster();
                 }
                 reportMarker.remove();
                 reportMarker = null;
@@ -225,36 +257,13 @@ public class MapController implements ClusterRender, ClusterClickListener {
                 Toast.makeText(mainContext, "无法连接网络...请稍后重试", Toast.LENGTH_LONG).show();
             }
         });
-
-        rbl = mainActivity.findViewById(R.id.report_button_Layout);
-        rbl.setVisibility(View.INVISIBLE);
-        Button reportSubmit = mainActivity.findViewById(R.id.reportSubmit);
-        Button reportCancel = mainActivity.findViewById(R.id.cancle);
-
-        reportSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                reportDialogHidden();
-                inputTitleDialog();
-            }
-        });
-        reportCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mReportPoint = null;
-                reportMarker.remove();
-                reportMarker = null;
-                reportDialogHidden();
-                Toast.makeText(mainContext, "你取消了申报", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     public void beginLocation() {
         MyLocationStyle myLocationStyle = new MyLocationStyle();
-        myLocationStyle.radiusFillColor(Color.parseColor("#6bbbec"))
+        myLocationStyle.radiusFillColor(Color.parseColor("#3F6bbbec"))
                 .myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);
-//        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(mainContext.getResources(), R.drawable.navi_map_gps_locked)));
+        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(mainContext.getResources(), R.drawable.navi_map_gps_locked)));
         mAMap.setMyLocationStyle(myLocationStyle);
         // 设置默认定位按钮是否显示，非必需设置。
         mAMap.getUiSettings().setMyLocationButtonEnabled(true);
@@ -410,7 +419,7 @@ public class MapController implements ClusterRender, ClusterClickListener {
         final int onlyOne = 1;
         final int notTooMuch = 5;
         final int soMuch = 10;
-        int radius = dp2px(mainContext, 80);
+        int radius = dp2px(mainContext, 60);
         if (clusterNum == onlyOne) {
             Drawable bitmapDrawable = mBackDrawAbles.get(1);
             if (bitmapDrawable == null) {

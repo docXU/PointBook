@@ -30,12 +30,18 @@ dependencies {
     })
 
     //3D地图so及jar
+    //noinspection GradleDependency
     compile 'com.amap.api:3dmap:latest.integration'
     //定位功能
+    //noinspection GradleDependency
     compile 'com.amap.api:location:latest.integration'
-    //搜索功能
-    compile 'com.amap.api:search:latest.integration'
 
+    //搜索功能
+    //noinspection GradleDependency
+    //compile 'com.amap.api:search:latest.integration'
+    compile 'com.wenwenwen888:searchbox:1.0.0'
+
+    //noinspection GradleDependency
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support:support-v4:26.+'
     compile 'com.android.support:design:26.+'
@@ -46,6 +52,8 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'ren.qinc.edit:lib:0.0.5'
     compile 'com.github.LuckSiege.PictureSelector:picture_library:v2.1.7'
+    //资讯列表依赖
+    compile 'com.github.jd-alexander:LikeButton:0.2.3'
     //客户端七牛
     compile 'com.qiniu:qiniu-android-sdk:7.3.+'
     //服务端qiniu

@@ -3,7 +3,7 @@ package com.debug.xxw.pointbook.model;
 import com.amap.api.maps.model.LatLng;
 import com.debug.xxw.pointbook.map.cluster.ClusterItem;
 
-import java.sql.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 public class RegionItem implements ClusterItem, Cloneable {
@@ -41,11 +41,16 @@ public class RegionItem implements ClusterItem, Cloneable {
 
     @Override
     public Object clone() {
+        RegionItem ri = null;
         try {
-            return super.clone();
+            ri = (RegionItem) super.clone();
+            ri.mLatLng = this.mLatLng.clone();
+            if (this.tags != null) {
+                ri.setTags(new LinkedList<>(this.tags));
+            }
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
-        return null;
+        return ri;
     }
 }

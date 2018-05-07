@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Poi;
 import com.debug.xxw.pointbook.R;
 import com.debug.xxw.pointbook.map.MapController;
@@ -129,21 +130,23 @@ public class MainActivity extends AppCompatActivity implements HintDialogFragmen
     public void OnSearchClick(String keyword) {
 
         //todo: 显示相关的cluster，做出状态栏表示当前搜索词。
-
         List<ClusterItem> clusters = mMapController.getmClusterOverlay().getmClusterItems();
         List<ClusterItem> filteredClusters = new LinkedList<>();
+
+        LatLngBounds visibleBounds = mMapController.getAmap()
+                .getProjection().getVisibleRegion().latLngBounds;
 
         for (ClusterItem ci : clusters) {
             RegionItem ri = (RegionItem) ci;
 
             //先搜索一下title，相关则加入
             if (ri.getTitle().contains(keyword)) {
-                filteredClusters.add((ClusterItem) ri.clone());
+                filteredClusters.add((RegionItem) ri.clone());
                 continue;
             }
 
             List<String> tags = ri.getTags();
-            if (tags != null){
+            if (tags != null) {
                 for (String tag : tags) {
                     if (tag.contains(keyword)) {
                         filteredClusters.add((ClusterItem) ri.clone());

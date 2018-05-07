@@ -383,12 +383,7 @@ public class MapController implements ClusterRender, ClusterClickListener {
             searchResultOverlay.onDestroy();
         }
 
-        searchResultOverlay = new ClusterOverlay(mAMap, list,
-                dp2px(mainContext, clusterRadius),
-                mainContext);
-        searchResultOverlay.setClusterRenderer(MapController.this);
-        searchResultOverlay.setOnClusterClickListener(MapController.this);
-
+        //镜头移动
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         LatLng center = new LatLng(mAMap.getMyLocation().getLatitude(), mAMap.getMyLocation().getLongitude());
         builder.include(center);
@@ -399,6 +394,11 @@ public class MapController implements ClusterRender, ClusterClickListener {
         LatLngBounds latLngBounds = builder.build();
         mAMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 50));
 
+        searchResultOverlay = new ClusterOverlay(mAMap, list,
+                dp2px(mainContext, clusterRadius),
+                mainContext);
+        searchResultOverlay.setClusterRenderer(this);
+        searchResultOverlay.setOnClusterClickListener(this);
     }
 
     /**

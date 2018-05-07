@@ -388,6 +388,17 @@ public class MapController implements ClusterRender, ClusterClickListener {
                 mainContext);
         searchResultOverlay.setClusterRenderer(MapController.this);
         searchResultOverlay.setOnClusterClickListener(MapController.this);
+
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        LatLng center = new LatLng(mAMap.getMyLocation().getLatitude(), mAMap.getMyLocation().getLongitude());
+        builder.include(center);
+        for (ClusterItem clusterItem : list) {
+            LatLng p = clusterItem.getPosition();
+            builder.include(p);
+        }
+        LatLngBounds latLngBounds = builder.build();
+        mAMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 50));
+
     }
 
     /**

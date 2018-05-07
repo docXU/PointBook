@@ -27,44 +27,37 @@ import okhttp3.Response;
 public class MarkerNetter {
 
     private String TAG = "apiReq";
-    public ArrayList<Marker> markerList;
     RequestManager.ReqCallBack mGetCallback;
     RequestManager.ReqCallBack mAddCallback;
     private Context mContext;
 
-    //tp5的控制类名作为请求入口之一
-    String getMarkerApiUrl = "marker/get";
-    String addtMarkerApiUrl = "marker/add";
     public MarkerNetter(Context c) {
         mContext = c;
     }
 
-    public void setMarkerRequestCallBack(RequestManager.ReqCallBack c)
-    {
+    public void setMarkerRequestCallBack(RequestManager.ReqCallBack c) {
         mGetCallback = c;
     }
-    public void setMarkerAddCallBack(RequestManager.ReqCallBack c)
-    {
+
+    public void setMarkerAddCallBack(RequestManager.ReqCallBack c) {
         mAddCallback = c;
     }
 
-    public void queryMarker(Location location, int scope)
-    {
+    public void queryMarker(Location location, int scope) {
         HashMap<String, String> params = new HashMap<String, String>();
-        params.put("lat",String.valueOf(location.getLatitude()));
-        params.put("lon",String.valueOf(location.getLongitude()));
-        params.put("scope",String.valueOf(scope));
+        params.put("lat", String.valueOf(location.getLatitude()));
+        params.put("lon", String.valueOf(location.getLongitude()));
+        params.put("scope", String.valueOf(scope));
 
-        RequestManager.getInstance(mContext).requestAsyn(getMarkerApiUrl,RequestManager.TYPE_GET,params, mGetCallback);
+        RequestManager.getInstance(mContext).requestAsyn(ConstURL.MARKER_GET, RequestManager.TYPE_GET, params, mGetCallback);
     }
 
-    public void addMarker(ReportPoint rp)
-    {
+    public void addMarker(ReportPoint rp) {
         HashMap<String, String> params = new HashMap<String, String>();
-        params.put("lat",String.valueOf(rp.getLocation().latitude));
-        params.put("lon",String.valueOf(rp.getLocation().longitude));
-        params.put("title",String.valueOf(rp.getTitle()));
+        params.put("lat", String.valueOf(rp.getLocation().latitude));
+        params.put("lon", String.valueOf(rp.getLocation().longitude));
+        params.put("title", String.valueOf(rp.getTitle()));
 
-        RequestManager.getInstance(mContext).requestAsyn(addtMarkerApiUrl,RequestManager.TYPE_GET,params, mAddCallback);
+        RequestManager.getInstance(mContext).requestAsyn(ConstURL.MARKER_ADD, RequestManager.TYPE_GET, params, mAddCallback);
     }
 }

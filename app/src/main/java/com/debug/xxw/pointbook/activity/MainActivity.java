@@ -26,13 +26,12 @@ import android.widget.Toast;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.MapView;
-import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Poi;
 import com.debug.xxw.pointbook.R;
 import com.debug.xxw.pointbook.map.MapController;
 import com.debug.xxw.pointbook.map.cluster.ClusterItem;
-import com.debug.xxw.pointbook.map.cluster.ClusterOverlay;
 import com.debug.xxw.pointbook.model.RegionItem;
+import com.debug.xxw.pointbook.model.Tag;
 import com.debug.xxw.pointbook.utils.ElasticOutInterpolator;
 import com.debug.xxw.pointbook.utils.PermissionUtil;
 import com.debug.xxw.pointbook.viewmodel.HintDialogFragment;
@@ -78,22 +77,8 @@ public class MainActivity extends AppCompatActivity implements HintDialogFragmen
             }
         });
 
-        //初始化地图视图和地图交互事件
         mMapView = (MapView) findViewById(R.id.map);
         mMapController = new MapController(getApplicationContext(), this, mMapView, savedInstanceState);
-        mMapController.getAmap().setOnPOIClickListener(new AMap.OnPOIClickListener() {
-            @Override
-            public void onPOIClick(Poi poi) {
-                Intent intent = new Intent();
-                intent.setClass(MainActivity.this, FeedActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("entry_id", poi.getPoiId());
-                bundle.putString("name", poi.getName());
-                bundle.putString("type", "poi");
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
 
         //权限请求
         if (PermissionUtil.checkLocationPermission(this)) {
@@ -133,9 +118,6 @@ public class MainActivity extends AppCompatActivity implements HintDialogFragmen
         List<ClusterItem> clusters = mMapController.getmClusterOverlay().getmClusterItems();
         List<ClusterItem> filteredClusters = new LinkedList<>();
 
-        LatLngBounds visibleBounds = mMapController.getAmap()
-                .getProjection().getVisibleRegion().latLngBounds;
-
         for (ClusterItem ci : clusters) {
             RegionItem ri = (RegionItem) ci;
 
@@ -145,10 +127,10 @@ public class MainActivity extends AppCompatActivity implements HintDialogFragmen
                 continue;
             }
 
-            List<String> tags = ri.getTags();
+            List<Tag> tags = ri.getTags();
             if (tags != null) {
-                for (String tag : tags) {
-                    if (tag.contains(keyword)) {
+                for (Tag tag : tags) {
+                    if (tag.getContent().contains(keyword)) {
                         filteredClusters.add((ClusterItem) ri.clone());
                     }
                 }
@@ -248,6 +230,16 @@ public class MainActivity extends AppCompatActivity implements HintDialogFragmen
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e("sdasdasdasdas", "asdasdasdasdasd");
+        Log.e("sdasdasdasdas", "asdasdasdasdasd");
+        Log.e("sdasdasdasdas", "asdasdasdasdasd");
+        Log.e("sdasdasdasdas", "asdasdasdasdasd");
+        mMapController.refreshMarkers();
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

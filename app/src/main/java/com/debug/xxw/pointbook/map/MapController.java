@@ -39,6 +39,8 @@ import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
+import com.amap.api.maps.model.Poi;
+import com.debug.xxw.pointbook.activity.MainActivity;
 import com.debug.xxw.pointbook.map.cluster.ClusterClickListener;
 import com.debug.xxw.pointbook.map.cluster.ClusterItem;
 import com.debug.xxw.pointbook.map.cluster.ClusterOverlay;
@@ -47,13 +49,16 @@ import com.debug.xxw.pointbook.activity.FeedActivity;
 import com.debug.xxw.pointbook.model.RegionItem;
 import com.debug.xxw.pointbook.R;
 import com.debug.xxw.pointbook.model.ReportPoint;
+import com.debug.xxw.pointbook.model.Tag;
 import com.debug.xxw.pointbook.net.MarkerNetter;
 import com.debug.xxw.pointbook.net.RequestManager;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -129,6 +134,21 @@ public class MapController implements ClusterRender, ClusterClickListener {
             }
         });
 
+        //初始化地图交互事件
+        getAmap().setOnPOIClickListener(new AMap.OnPOIClickListener() {
+            @Override
+            public void onPOIClick(Poi poi) {
+                Intent intent = new Intent();
+                intent.setClass(mainActivity, FeedActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("entry_id", poi.getPoiId());
+                bundle.putString("name", poi.getName());
+                bundle.putString("type", "poi");
+                intent.putExtras(bundle);
+                mainActivity.startActivity(intent);
+            }
+        });
+
         mAMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
@@ -163,7 +183,7 @@ public class MapController implements ClusterRender, ClusterClickListener {
                 mLocation = new LatLng(location.getLatitude(), location.getLongitude());
                 if (needMoveToCenter) {
                     needMoveToCenter = false;
-                    mAMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLocation, 13f));
+                    mAMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLocation, 14f));
                     mMarkerNetter.queryMarker(location, activityScope);
                 }
 
@@ -172,8 +192,8 @@ public class MapController implements ClusterRender, ClusterClickListener {
                 } else {
                     reportRegion = mAMap.addCircle(new CircleOptions().center(mLocation).radius(1000 * activityScope).strokeWidth(5));
                 }
-                //当两次定位距离大于100m的时候重启拉取数据
-                if (lastLocation != null && location.distanceTo(lastLocation) > 100) {
+                //当两次定位距离大于50m的时候重新拉取数据
+                if (lastLocation != null && location.distanceTo(lastLocation) > 50) {
                     //发起异步请求获取周围的活动点集
                     mMarkerNetter.queryMarker(location, activityScope);
                 }
@@ -194,6 +214,7 @@ public class MapController implements ClusterRender, ClusterClickListener {
                     mClusterOverlay.setClusterRenderer(MapController.this);
                     mClusterOverlay.setOnClusterClickListener(MapController.this);
                 } else {
+                    mClusterOverlay.setmClusterItems(markerList);
                     mClusterOverlay.assignClusters();
                 }
             }
@@ -224,18 +245,24 @@ public class MapController implements ClusterRender, ClusterClickListener {
                             String sid = jo.getString("sid");
                             String title = jo.getString("title");
 
-                            //TODO:解析tags
-//                            //获取tag列表
-//                            List<String> tags = new LinkedList<>();
-//                            JSONArray tagArray = jo.getJSONArray("tags");
-//                            int tagSize = tagArray.length();
-//                            for (int j = 0; j < tagSize; j++) {
-//                                tags.add(jo.getString(""+j));
-//                            }
+                            //获取tag列表
+                            List<Tag> tags = new LinkedList<>();
+                            JSONArray tagArray = jo.getJSONArray("tags");
+                            int tagSize = tagArray.length();
+                            for (int j = 0; j < tagSize; j++) {
+                                JSONObject tag = tagArray.getJSONObject(j);
+                                Tag tagIns = new Tag().setTid(tag.getInt("id"))
+                                        .setMid(tag.getString("mid"))
+                                        .setContent(tag.getString("content"))
+                                        .setUid(tag.getInt("uid"));
+                                tags.add(tagIns);
+                            }
 
                             LatLng latLng = new LatLng(lat, lon, false);
                             RegionItem regionItem = new RegionItem(sid, latLng, title);
-//                            regionItem.setTags(tags);
+                            if (tags.size() > 0) {
+                                regionItem.setTags(tags);
+                            }
                             items.add(regionItem);
                         } catch (JSONException je) {
                             Log.e(TAG, "json对象不存在某个键");
@@ -281,6 +308,13 @@ public class MapController implements ClusterRender, ClusterClickListener {
         mAMap.getUiSettings().setMyLocationButtonEnabled(true);
         // 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
         mAMap.setMyLocationEnabled(true);
+    }
+
+    /**
+     * 刷新Markers
+     */
+    public void refreshMarkers() {
+        mMarkerNetter.queryMarker(lastLocation, activityScope);
     }
 
     /**
@@ -356,9 +390,10 @@ public class MapController implements ClusterRender, ClusterClickListener {
         bundle.putString("entry_id", item.getId());
         bundle.putString("name", item.getTitle());
         bundle.putString("type", "marker");
-
+        bundle.putSerializable("tags", (Serializable) item.getTags());
         intent.putExtras(bundle);
-        mainActivity.startActivity(intent);
+        //TODO:设置区分代码requestCode用于和SettingActivity 做区分
+        mainActivity.startActivityForResult(intent, 0);
     }
 
     public void onDestroy() {
@@ -376,9 +411,10 @@ public class MapController implements ClusterRender, ClusterClickListener {
 
     /**
      * 显示搜索结果图层
+     *
      * @param list
      */
-    public void openSearchResultOverlay(List<ClusterItem> list){
+    public void openSearchResultOverlay(List<ClusterItem> list) {
         if (null != searchResultOverlay) {
             searchResultOverlay.onDestroy();
         }
@@ -535,6 +571,4 @@ public class MapController implements ClusterRender, ClusterClickListener {
     public ClusterOverlay getmClusterOverlay() {
         return mClusterOverlay;
     }
-
-
 }

@@ -16,16 +16,13 @@ public class WeiboNetter {
     private final String TAG = this.getClass().getSimpleName();
     private final Context mContext;
 
-    private final String GETURL = "weibo/get";
-    private final String ADDURL = "weibo/add";
-
     public WeiboNetter(Context c) { mContext  = c;}
 
     public void queryWeiboList(String markerId, RequestManager.ReqCallBack c){
         HashMap<String, String> params = new HashMap<>();
         params.put("entryId", markerId);
 
-        RequestManager.getInstance(mContext).requestAsyn(GETURL,RequestManager.TYPE_GET, params, c);
+        RequestManager.getInstance(mContext).requestAsyn(ConstURL.WEIBO_GET, RequestManager.TYPE_GET, params, c);
     }
 
     public void addWeibo(String entryId, Weibo weibo, RequestManager.ReqCallBack c){
@@ -42,6 +39,6 @@ public class WeiboNetter {
             Log.i(TAG, keyvalue.getValue());
         }
 
-        RequestManager.getInstance(mContext).requestAsyn(ADDURL,RequestManager.TYPE_GET,params, c);
+        RequestManager.getInstance(mContext).requestAsyn(ConstURL.WEIBO_ADD, RequestManager.TYPE_GET, params, c);
     }
 }

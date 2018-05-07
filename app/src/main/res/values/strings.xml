@@ -6,7 +6,8 @@
     <string name="action_settings">Settings</string>
     <string name="setting_icon">setting-icon</string>
 
-    <string name="server_address">http://119.29.4.16/pointbook</string>
+    <!--<string name="server_address">http://119.29.4.16/pointbook</string>-->
+    <string name="server_address">http://192.168.1.104/pointbook</string>
     <string name="qiniu_address">http://oz5hnga51.bkt.clouddn.com/</string>
 
 

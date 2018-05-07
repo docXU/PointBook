@@ -83,7 +83,6 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
         assignClusters();
     }
 
-
     public void showOverlay() {
         hidden = false;
         assignClusters();
@@ -100,7 +99,7 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
     /**
      * 设置聚合点的点击事件
      *
-     * @param clusterClickListener
+     * @param clusterClickListener 可聚合元素点击监听
      */
     public void setOnClusterClickListener(
             ClusterClickListener clusterClickListener) {

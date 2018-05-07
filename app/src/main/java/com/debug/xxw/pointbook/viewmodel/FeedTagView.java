@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,6 +17,9 @@ import com.debug.xxw.pointbook.R;
 public class FeedTagView extends LinearLayout {
     private TextView tv;
     private ImageButton button;
+
+    //Tag的数据
+    private int tagId;
 
     public FeedTagView(Context context) {
         super(context);
@@ -30,11 +34,12 @@ public class FeedTagView extends LinearLayout {
         button.setVisibility(GONE);
     }
 
-    public void hiddenTv(){
+
+    public void hiddenTv() {
         tv.setVisibility(GONE);
     }
 
-    public void displayBtn(){
+    public void displayBtn() {
         button.setVisibility(VISIBLE);
     }
 
@@ -52,5 +57,17 @@ public class FeedTagView extends LinearLayout {
 
     public void setButton(ImageButton button) {
         this.button = button;
+    }
+
+    public int getTagId() {
+        return tagId;
+    }
+
+    public void setTagId(int tagId) {
+        this.tagId = tagId;
+    }
+
+    public interface LongClickListener {
+        void onLongClick();
     }
 }

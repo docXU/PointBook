@@ -1,21 +1,26 @@
 package com.debug.xxw.pointbook.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.debug.xxw.pointbook.R;
 import com.debug.xxw.pointbook.adapter.WeiboListViewAdapter;
 import com.debug.xxw.pointbook.model.NineGridModel;
+import com.debug.xxw.pointbook.model.Tag;
 import com.debug.xxw.pointbook.model.Weibo;
+import com.debug.xxw.pointbook.net.ConstURL;
 import com.debug.xxw.pointbook.net.RequestManager;
 import com.debug.xxw.pointbook.net.WeiboNetter;
 import com.debug.xxw.pointbook.viewmodel.FeedTagView;
@@ -29,6 +34,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -48,6 +54,10 @@ public class FeedActivity extends AppCompatActivity {
     private WeiboListViewAdapter adapter;
     private final int RequestCode = 10;
 
+    private List<Tag> tagList;
+
+    private static int TAG_MAX_SIZE = 9;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,46 +70,155 @@ public class FeedActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final TagFlowLayout mTagFlowLayout = (TagFlowLayout) findViewById(R.id.id_flowlayout);
-        final List<FeedTagView> mVal = new LinkedList<>();
-        List<String> mock = new LinkedList<>(Arrays.asList("猫奴", "BoyNextDoor", "海里捞火锅", "免费咖啡", "Tesla充电桩", "变态辣奶茶", "+"));
-
-        for (String s : mock) {
-            FeedTagView ftv = new FeedTagView(mContext, null);
-            ftv.getTv().setText(s);
-            mVal.add(ftv);
-        }
-
-        mTagFlowLayout.setOnTagClickListener(new TagFlowLayout.OnTagClickListener() {
-            @Override
-            public boolean onTagClick(View view, int position, FlowLayout parent) {
-                Toast.makeText(mContext, "tag click", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
-        mTagFlowLayout.setAdapter(new TagAdapter<FeedTagView>(mVal) {
-            @Override
-            public View getView(final FlowLayout parent, int position, FeedTagView s) {
-                if (position == mVal.size() - 1) {
-                    s.displayBtn();
-                    s.getButton().setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Toast.makeText(mContext, "add button clicked!", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    s.hiddenTv();
-                }
-                return s;
-            }
-        });
-
         //解析bundle
         if (bundle == null) {
             throw new IllegalArgumentException("没有点的身份信息");
         }
         final String entryId = bundle.getString("entry_id");
         final String entryName = bundle.getString("name");
+        tagList = (List<Tag>) bundle.getSerializable("tags");
+
+        //Marker类的点才有tag
+        if (bundle.getString("type").equals("marker") && tagList != null) {
+            TagFlowLayout mTagFlowLayout = (TagFlowLayout) findViewById(R.id.id_flowlayout);
+            mTagFlowLayout.setVisibility(View.VISIBLE);
+            final List<FeedTagView> displayTagViews = new LinkedList<>();
+
+            //tag不能大于9个
+            for (Tag tag : tagList) {
+                FeedTagView ftv = new FeedTagView(mContext, null);
+                ftv.getTv().setText(tag.getContent());
+                displayTagViews.add(ftv);
+            }
+
+            //添加预留位
+            for (int i = tagList.size() - 1; i < TAG_MAX_SIZE; i++) {
+                displayTagViews.add(new FeedTagView(mContext, null));
+            }
+            //添加一个view作为Add按钮
+            displayTagViews.add(new FeedTagView(mContext, null));
+
+            mTagFlowLayout.setAdapter(new TagAdapter<FeedTagView>(displayTagViews) {
+                @Override
+                public View getView(final FlowLayout parent, final int position, FeedTagView s) {
+                    if (position == displayTagViews.size() - 1) {
+                        s.displayBtn();
+                        s.hiddenTv();
+                    } else {
+                        if (position > tagList.size() - 1) {
+                            s.setVisibility(View.GONE);
+                        } else {
+                            s.setOnLongClickListener(new View.OnLongClickListener() {
+                                @Override
+                                public boolean onLongClick(View v) {
+                                    showTagDeleteDialog(position, (FeedTagView) v);
+                                    return false;
+                                }
+                            });
+                        }
+                    }
+                    return s;
+                }
+
+                private void showTagDeleteDialog(final int position, final FeedTagView targetTag) {
+                    final Tag target = tagList.get(position);
+                    AlertDialog dialog = new AlertDialog.Builder(FeedActivity.this)
+                            //.setIcon(R.mipmap.icon)
+                            .setTitle("严重警告")
+                            .setMessage("是否要删除[ " + target.getContent() + " ]标签？")
+                            .setNegativeButton("算了", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Toast.makeText(FeedActivity.this, "为啥不删了啊？", Toast.LENGTH_SHORT).show();
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setPositiveButton("嗯哼", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Toast.makeText(FeedActivity.this, "正在给你删掉...", Toast.LENGTH_SHORT).show();
+
+                                    HashMap<String, String> params = new HashMap<String, String>();
+                                    params.put("tid", String.valueOf(target.getTid()));
+
+                                    RequestManager.getInstance(mContext).requestAsyn(ConstURL.TAG_DELETE, RequestManager.TYPE_GET, params, new RequestManager.ReqCallBack<Object>() {
+                                        @Override
+                                        public void onReqSuccess(Object result) {
+                                            tagList.remove(position);
+                                            targetTag.setVisibility(View.GONE);
+                                            Toast.makeText(FeedActivity.this, "好了~", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                        @Override
+                                        public void onReqFailed(String errorMsg) {
+                                            Toast.makeText(FeedActivity.this, "完了朋友，删不掉...再试试吧", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                    dialog.dismiss();
+                                }
+                            }).create();
+                    dialog.show();
+                }
+            });
+
+            mTagFlowLayout.setOnTagClickListener(new TagFlowLayout.OnTagClickListener() {
+                @Override
+                public boolean onTagClick(View view, int position, FlowLayout parent) {
+                    if (position == displayTagViews.size() - 1) {
+                        showAddTagDialog(parent);
+                    }
+                    return false;
+                }
+
+                private void showAddTagDialog(FlowLayout parent) {
+                    if (tagList.size() == TAG_MAX_SIZE) {
+                        Toast.makeText(FeedActivity.this, "不好意思，已达标签数最大容量~", Toast.LENGTH_LONG).show();
+                        parent.getChildAt(TAG_MAX_SIZE).setVisibility(View.GONE);
+                        return;
+                    }
+
+                    //ToDo:这里无法转换，5.8号解决。
+                    final FeedTagView targetPlaceHolder = (FeedTagView) parent.getChildAt(tagList.size());
+                    final EditText et = new EditText(FeedActivity.this);
+                    new AlertDialog.Builder(FeedActivity.this).setTitle("添加标签")
+                            .setIcon(android.R.drawable.ic_dialog_info)
+                            .setView(et)
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    final String input = et.getText().toString();
+                                    if (input.equals("")) {
+                                        Toast.makeText(getApplicationContext(), "标签描述不能为空！", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        HashMap<String, String> params = new HashMap<String, String>();
+                                        params.put("mid", String.valueOf(entryId));
+                                        params.put("content", input);
+                                        //TODO:加用户信息,这里的Uid是字符串，可能会出现异常
+                                        params.put("uid", "1");
+
+                                        RequestManager.getInstance(mContext).requestAsyn(ConstURL.TAG_ADD, RequestManager.TYPE_GET, params, new RequestManager.ReqCallBack<Object>() {
+                                            @Override
+                                            public void onReqSuccess(Object result) {
+                                                int tid = (int) result;
+                                                tagList.add(new Tag().setTid(tid).setMid(entryId).setContent(input).setUid(1));
+                                                targetPlaceHolder.getTv().setText(input);
+                                                targetPlaceHolder.setVisibility(View.VISIBLE);
+                                                Toast.makeText(FeedActivity.this, "好了~", Toast.LENGTH_SHORT).show();
+                                            }
+
+                                            @Override
+                                            public void onReqFailed(String errorMsg) {
+                                                Toast.makeText(FeedActivity.this, "完了朋友，现在添加不了...再试试吧", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                        dialog.dismiss();
+                                    }
+                                }
+                            })
+                            .setNegativeButton("取消", null)
+                            .show();
+                }
+            });
+        }
 
         CollapsingToolbarLayout ctl = ((CollapsingToolbarLayout) findViewById(R.id.ctl_feed_better));
         ctl.setTitle(entryName);
@@ -144,8 +263,8 @@ public class FeedActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), R.string.query_weibolist_fail, Toast.LENGTH_SHORT).show();
             }
         });
-    }
 
+    }
 
     private List<Weibo> parseResultToWeibo(Object result) {
         List<Weibo> items = new ArrayList<>();
@@ -222,4 +341,6 @@ public class FeedActivity extends AppCompatActivity {
     private String parseErrorMessage(JSONArray data) {
         return data.toString();
     }
+
+
 }

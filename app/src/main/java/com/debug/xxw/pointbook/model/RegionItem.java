@@ -1,16 +1,18 @@
 package com.debug.xxw.pointbook.model;
 
+
 import com.amap.api.maps.model.LatLng;
 import com.debug.xxw.pointbook.map.cluster.ClusterItem;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class RegionItem implements ClusterItem, Cloneable {
+public class RegionItem implements ClusterItem, Cloneable, Serializable {
     private LatLng mLatLng;
     private String mTitle;
     private String mId;
-    private List<String> tags = null;
+    private List<Tag> tags = null;
 
     public RegionItem(String id, LatLng latLng, String title) {
         mId = id;
@@ -27,11 +29,11 @@ public class RegionItem implements ClusterItem, Cloneable {
         return mTitle;
     }
 
-    public List<String> getTags() {
+    public List<Tag> getTags() {
         return tags;
     }
 
-    public void setTags(List<String> tags) {
+    public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
 

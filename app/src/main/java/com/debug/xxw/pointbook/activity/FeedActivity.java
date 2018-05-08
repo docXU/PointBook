@@ -132,8 +132,6 @@ public class FeedActivity extends AppCompatActivity {
                         return;
                     }
 
-                    //todo:这里无法转换，5.8号解决。
-
                     final FrameLayout tagViewHolder = (FrameLayout) parent.getChildAt(tagList.size());
                     final FeedTagView targetPlaceHolder = (FeedTagView) tagViewHolder.getChildAt(0);
                     final EditText et = new EditText(FeedActivity.this);
@@ -152,6 +150,7 @@ public class FeedActivity extends AppCompatActivity {
                                         //TODO:加用户信息,这里的Uid是字符串，可能会出现异常
                                         params.put("uid", "1");
 
+                                        Toast.makeText(getApplicationContext(), "正在同步添加Tag...", Toast.LENGTH_LONG).show();
                                         RequestManager.getInstance(mContext).requestAsyn(ConstURL.TAG_ADD, RequestManager.TYPE_GET, params, new RequestManager.ReqCallBack<Object>() {
                                             @Override
                                             public void onReqSuccess(Object result) {

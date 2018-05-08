@@ -133,41 +133,38 @@ public class SettingView extends ViewGroup {
     }
 
     public void initHeaderView(Context context) {
+
         mHeaderView = new LinearLayout(context);
         mHeaderView.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout.LayoutParams l = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        mHeaderView.setLayoutParams(l);
+        mHeaderView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         mHeaderView.setPadding(0, calPxFromDp(10), 0, calPxFromDp(10));
-
-        SearchView mSearchView = new SearchView(context);
-        l = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        mSearchView.setLayoutParams(l);
-        mSearchView.setBackground(context.getResources().getDrawable(R.drawable.search_edittext_shape));
-        mSearchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
-        //默认非输入状态
-        mSearchView.setIconifiedByDefault(false);
-        mSearchView.setInputType(InputType.TYPE_NULL);
-        mSearchView.setSubmitButtonEnabled(false);
-        mSearchView.setQueryHint("搜索");
-        mHeaderView.addView(mSearchView);
-
+//
+////        SearchView mSearchView = new SearchView(context);
+////        l = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+////        mSearchView.setLayoutParams(l);
+////        mSearchView.setBackground(context.getResources().getDrawable(R.drawable.search_edittext_shape));
+////        mSearchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+////        //默认非输入状态
+////        mSearchView.setIconifiedByDefault(false);
+////        mSearchView.setInputType(InputType.TYPE_NULL);
+////        mSearchView.setSubmitButtonEnabled(false);
+////        mSearchView.setQueryHint("搜索");
+////        mHeaderView.addView(mSearchView);
 
         LinearLayout linearLayout = new LinearLayout(context);
-        l = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        linearLayout.setLayoutParams(l);
+        linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         linearLayout.setPadding(0, calPxFromDp(15), 0, calPxFromDp(15));
 
         mGridView = new GridView(context);
-        l = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        mGridView.setLayoutParams(l);
-        mGridView.setNumColumns(4);
+        mGridView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        mGridView.setNumColumns(1);
         mGridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
         linearLayout.addView(mGridView);
         mHeaderView.addView(linearLayout);
         addView(mHeaderView);
     }
 
-    public void setGridAdapter(BaseAdapter adapter) {
+    public void setUserAdapter(BaseAdapter adapter) {
         if (null != mGridView) {
             mGridView.setAdapter(adapter);
             mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

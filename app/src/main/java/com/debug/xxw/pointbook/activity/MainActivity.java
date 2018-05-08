@@ -32,6 +32,7 @@ import com.debug.xxw.pointbook.map.MapController;
 import com.debug.xxw.pointbook.map.cluster.ClusterItem;
 import com.debug.xxw.pointbook.model.RegionItem;
 import com.debug.xxw.pointbook.model.Tag;
+import com.debug.xxw.pointbook.model.User;
 import com.debug.xxw.pointbook.utils.ElasticOutInterpolator;
 import com.debug.xxw.pointbook.utils.PermissionUtil;
 import com.debug.xxw.pointbook.viewmodel.HintDialogFragment;
@@ -144,6 +145,8 @@ public class MainActivity extends AppCompatActivity implements HintDialogFragmen
             mMapController.getmClusterOverlay().hiddenOverlay();
             mMapController.openSearchResultOverlay(filteredClusters);
         }
+        //TODO:上传用户搜素信息
+
     }
 
     @Override
@@ -173,7 +176,10 @@ public class MainActivity extends AppCompatActivity implements HintDialogFragmen
         @Override
         public void onAnimationEnd(Animator animation) {
             mFab.setVisibility(View.GONE);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("user", null);
             Intent i = new Intent(MainActivity.this, SettingActivity.class);
+            i.putExtras(bundle);
             startActivity(i);
         }
 

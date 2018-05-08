@@ -133,23 +133,10 @@ public class SettingView extends ViewGroup {
     }
 
     public void initHeaderView(Context context) {
-
         mHeaderView = new LinearLayout(context);
         mHeaderView.setOrientation(LinearLayout.VERTICAL);
         mHeaderView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         mHeaderView.setPadding(0, calPxFromDp(10), 0, calPxFromDp(10));
-//
-////        SearchView mSearchView = new SearchView(context);
-////        l = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-////        mSearchView.setLayoutParams(l);
-////        mSearchView.setBackground(context.getResources().getDrawable(R.drawable.search_edittext_shape));
-////        mSearchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
-////        //默认非输入状态
-////        mSearchView.setIconifiedByDefault(false);
-////        mSearchView.setInputType(InputType.TYPE_NULL);
-////        mSearchView.setSubmitButtonEnabled(false);
-////        mSearchView.setQueryHint("搜索");
-////        mHeaderView.addView(mSearchView);
 
         LinearLayout linearLayout = new LinearLayout(context);
         linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -167,12 +154,6 @@ public class SettingView extends ViewGroup {
     public void setUserAdapter(BaseAdapter adapter) {
         if (null != mGridView) {
             mGridView.setAdapter(adapter);
-            mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Toast.makeText(mContext, "点击了元素", Toast.LENGTH_SHORT).show();
-                }
-            });
         }
     }
 
@@ -217,7 +198,6 @@ public class SettingView extends ViewGroup {
             fabAnim.setInterpolator(new ElasticOutInterpolator());
             fabAnim.start();
         }
-
     }
 
     @Override
@@ -269,7 +249,6 @@ public class SettingView extends ViewGroup {
 
         @Override
         public void onAnimationEnd(Animator animation) {
-            //回到MainActivity
             ((Activity) mContext).finish();
         }
 

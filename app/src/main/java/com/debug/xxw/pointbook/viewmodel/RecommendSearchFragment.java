@@ -16,6 +16,7 @@ public class RecommendSearchFragment extends SearchFragment {
     public void insertRecommendList(List<String> items){
         //反射获取适配器对象
         try{
+            //TODO:只有往SearchFragment里的history链表加数据然后notify
             SearchHistoryAdapter sha = (SearchHistoryAdapter) get(this, "searchHistoryAdapter");
         }catch (Exception e){
             Log.e("reflectErr", e.getMessage());

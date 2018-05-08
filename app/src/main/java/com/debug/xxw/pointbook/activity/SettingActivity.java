@@ -1,16 +1,17 @@
 package com.debug.xxw.pointbook.activity;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.debug.xxw.pointbook.R;
 import com.debug.xxw.pointbook.model.LetterDrawable;
@@ -28,7 +29,6 @@ import java.util.List;
  */
 public class SettingActivity extends AppCompatActivity {
     private List<HashMap<String, Object>> mListData;
-    private List<HashMap<String, Object>> mGridData;
     private final String FUN_NAME = "fun_name";
     private final String FUN_ICON = "fun_icon";
     private User user;
@@ -44,41 +44,6 @@ public class SettingActivity extends AppCompatActivity {
         mSettingView.setListAdapter(new SettingListAdapter());
         mSettingView.setUserAdapter(new UserDataAdapter());
     }
-
-    public void initListData() {
-        mListData = new ArrayList<>();
-
-        HashMap<String, Object> map1 = new HashMap<>(2);
-        map1.put(FUN_NAME, "首页");
-        map1.put(FUN_ICON, new LetterDrawable("M", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
-        mListData.add(map1);
-
-        HashMap<String, Object> map2 = new HashMap<>(2);
-        map2.put(FUN_NAME, "关闭图层");
-        map2.put(FUN_ICON, new LetterDrawable("P", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
-        mListData.add(map2);
-
-        HashMap<String, Object> map4 = new HashMap<>(2);
-        map4.put(FUN_NAME, "调整活动范围");
-        map4.put(FUN_ICON, new LetterDrawable("R", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
-        mListData.add(map4);
-
-        HashMap<String, Object> map5 = new HashMap<>(2);
-        map5.put(FUN_NAME, "我的收藏");
-        map5.put(FUN_ICON, new LetterDrawable("T", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
-        mListData.add(map5);
-
-        HashMap<String, Object> map6 = new HashMap<>(2);
-        map6.put(FUN_NAME, "个人中心");
-        map6.put(FUN_ICON, new LetterDrawable("S", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
-        mListData.add(map6);
-
-        HashMap<String, Object> map7 = new HashMap<>(2);
-        map7.put(FUN_NAME, "关于我");
-        map7.put(FUN_ICON, new LetterDrawable("I", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
-        mListData.add(map7);
-    }
-
 
     public class SettingListAdapter extends BaseAdapter {
         @Override
@@ -107,6 +72,12 @@ public class SettingActivity extends AppCompatActivity {
                 holder.funIcon = convertView.findViewById(R.id.fun_ic);
 
                 convertView.setTag(holder);
+                ((AdapterView) parent).setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Toast.makeText(SettingActivity.this, "点击了列元素", Toast.LENGTH_SHORT).show();
+                    }
+                });
             } else {
                 holder = (ListViewHolder) (convertView.getTag());
             }
@@ -152,6 +123,13 @@ public class SettingActivity extends AppCompatActivity {
                 holder.describe = convertView.findViewById(R.id.describe);
 
                 convertView.setTag(holder);
+                convertView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LoginDialogFragment.newInstance("1304924151@qq.com")
+                                .show(getSupportFragmentManager(), "loginFragment");
+                    }
+                });
             } else {
                 holder = (UserBarViewHolder) (convertView.getTag());
             }
@@ -162,9 +140,8 @@ public class SettingActivity extends AppCompatActivity {
             } else {
                 Picasso.with(SettingActivity.this).load("https://t12.baidu.com/it/u=1379413910,591030782&fm=173&app=25&f=JPEG?w=550&h=309&s=5EAE8744760A714306AB51C7030050AB").error(R.drawable.defaulthead).into(holder.head);
                 holder.username.setText("xxw");
-                holder.describe.setText("aslkdjaslkdjas");
+                holder.describe.setText("我的app由大自然创造");
             }
-
 
             return convertView;
         }
@@ -175,6 +152,41 @@ public class SettingActivity extends AppCompatActivity {
         private TextView username;
         private TextView describe;
 
+    }
+
+
+    public void initListData() {
+        mListData = new ArrayList<>();
+
+        HashMap<String, Object> map1 = new HashMap<>(2);
+        map1.put(FUN_NAME, "首页");
+        map1.put(FUN_ICON, new LetterDrawable("M", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
+        mListData.add(map1);
+
+        HashMap<String, Object> map2 = new HashMap<>(2);
+        map2.put(FUN_NAME, "关闭图层");
+        map2.put(FUN_ICON, new LetterDrawable("P", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
+        mListData.add(map2);
+
+        HashMap<String, Object> map4 = new HashMap<>(2);
+        map4.put(FUN_NAME, "调整活动范围");
+        map4.put(FUN_ICON, new LetterDrawable("R", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
+        mListData.add(map4);
+
+        HashMap<String, Object> map5 = new HashMap<>(2);
+        map5.put(FUN_NAME, "我的收藏");
+        map5.put(FUN_ICON, new LetterDrawable("T", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
+        mListData.add(map5);
+
+        HashMap<String, Object> map6 = new HashMap<>(2);
+        map6.put(FUN_NAME, "个人中心");
+        map6.put(FUN_ICON, new LetterDrawable("S", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
+        mListData.add(map6);
+
+        HashMap<String, Object> map7 = new HashMap<>(2);
+        map7.put(FUN_NAME, "关于我");
+        map7.put(FUN_ICON, new LetterDrawable("I", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
+        mListData.add(map7);
     }
 
 

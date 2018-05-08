@@ -234,10 +234,6 @@ public class MainActivity extends AppCompatActivity implements HintDialogFragmen
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.e("sdasdasdasdas", "asdasdasdasdasd");
-        Log.e("sdasdasdasdas", "asdasdasdasdasd");
-        Log.e("sdasdasdasdas", "asdasdasdasdasd");
-        Log.e("sdasdasdasdas", "asdasdasdasdasd");
         mMapController.refreshMarkers();
         super.onActivityResult(requestCode, resultCode, data);
     }

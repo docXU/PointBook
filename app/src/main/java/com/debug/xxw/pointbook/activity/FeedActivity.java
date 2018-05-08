@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.debug.xxw.pointbook.R;
@@ -93,7 +94,9 @@ public class FeedActivity extends AppCompatActivity {
 
             //添加预留位
             for (int i = tagList.size() - 1; i < TAG_MAX_SIZE; i++) {
-                displayTagViews.add(new FeedTagView(mContext, null));
+                FeedTagView placeHolder = new FeedTagView(mContext, null);
+                placeHolder.setVisibility(View.GONE);
+                displayTagViews.add(placeHolder);
             }
             //添加一个view作为Add按钮
             displayTagViews.add(new FeedTagView(mContext, null));
@@ -103,24 +106,83 @@ public class FeedActivity extends AppCompatActivity {
                 public View getView(final FlowLayout parent, final int position, FeedTagView s) {
                     if (position == displayTagViews.size() - 1) {
                         s.displayBtn();
+                        s.getButton().setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                showAddTagDialog(parent);
+                            }
+                        });
                         s.hiddenTv();
                     } else {
-                        if (position > tagList.size() - 1) {
-                            s.setVisibility(View.GONE);
-                        } else {
-                            s.setOnLongClickListener(new View.OnLongClickListener() {
-                                @Override
-                                public boolean onLongClick(View v) {
-                                    showTagDeleteDialog(position, (FeedTagView) v);
-                                    return false;
-                                }
-                            });
-                        }
+                        s.setOnLongClickListener(new View.OnLongClickListener() {
+                            @Override
+                            public boolean onLongClick(View v) {
+                                showTagDeleteDialog(position, parent);
+                                return false;
+                            }
+                        });
                     }
                     return s;
                 }
 
-                private void showTagDeleteDialog(final int position, final FeedTagView targetTag) {
+                private void showAddTagDialog(FlowLayout parent) {
+                    if (tagList.size() == TAG_MAX_SIZE) {
+                        Toast.makeText(FeedActivity.this, "不好意思，已达标签数最大容量~", Toast.LENGTH_LONG).show();
+                        parent.getChildAt(TAG_MAX_SIZE).setVisibility(View.GONE);
+                        return;
+                    }
+
+                    //todo:这里无法转换，5.8号解决。
+
+                    final FrameLayout tagViewHolder = (FrameLayout) parent.getChildAt(tagList.size());
+                    final FeedTagView targetPlaceHolder = (FeedTagView) tagViewHolder.getChildAt(0);
+                    final EditText et = new EditText(FeedActivity.this);
+                    new AlertDialog.Builder(FeedActivity.this).setTitle("添加标签咯~")
+                            .setIcon(android.R.drawable.ic_menu_add)
+                            .setView(et)
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    final String input = et.getText().toString();
+                                    if (input.equals("")) {
+                                        Toast.makeText(getApplicationContext(), "标签描述不能为空！", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        HashMap<String, String> params = new HashMap<String, String>();
+                                        params.put("mid", String.valueOf(entryId));
+                                        params.put("content", input);
+                                        //TODO:加用户信息,这里的Uid是字符串，可能会出现异常
+                                        params.put("uid", "1");
+
+                                        RequestManager.getInstance(mContext).requestAsyn(ConstURL.TAG_ADD, RequestManager.TYPE_GET, params, new RequestManager.ReqCallBack<Object>() {
+                                            @Override
+                                            public void onReqSuccess(Object result) {
+                                                try {
+                                                    int tid = Integer.parseInt(String.valueOf(result).replace("\"", ""));
+                                                    tagList.add(new Tag().setTid(tid).setMid(entryId).setContent(input).setUid(1));
+                                                    targetPlaceHolder.getTv().setText(input);
+                                                    targetPlaceHolder.setVisibility(View.VISIBLE);
+                                                    tagViewHolder.setVisibility(View.VISIBLE);
+                                                    Toast.makeText(FeedActivity.this, "好了~", Toast.LENGTH_SHORT).show();
+                                                } catch (Exception e) {
+                                                    Log.e(FeedActivity.this.getLocalClassName(), e.getMessage());
+                                                    e.printStackTrace();
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onReqFailed(String errorMsg) {
+                                                Toast.makeText(FeedActivity.this, "完了朋友，现在添加不了...再试试吧", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+
+                                        dialog.dismiss();
+                                    }
+                                }
+                            })
+                            .setNegativeButton("取消", null)
+                            .show();
+                }
+
+                private void showTagDeleteDialog(final int position, final FlowLayout parent) {
                     final Tag target = tagList.get(position);
                     AlertDialog dialog = new AlertDialog.Builder(FeedActivity.this)
                             //.setIcon(R.mipmap.icon)
@@ -144,8 +206,8 @@ public class FeedActivity extends AppCompatActivity {
                                     RequestManager.getInstance(mContext).requestAsyn(ConstURL.TAG_DELETE, RequestManager.TYPE_GET, params, new RequestManager.ReqCallBack<Object>() {
                                         @Override
                                         public void onReqSuccess(Object result) {
+                                            squeezeDisplayTag(parent, tagList.size(), position);
                                             tagList.remove(position);
-                                            targetTag.setVisibility(View.GONE);
                                             Toast.makeText(FeedActivity.this, "好了~", Toast.LENGTH_SHORT).show();
                                         }
 
@@ -164,58 +226,7 @@ public class FeedActivity extends AppCompatActivity {
             mTagFlowLayout.setOnTagClickListener(new TagFlowLayout.OnTagClickListener() {
                 @Override
                 public boolean onTagClick(View view, int position, FlowLayout parent) {
-                    if (position == displayTagViews.size() - 1) {
-                        showAddTagDialog(parent);
-                    }
                     return false;
-                }
-
-                private void showAddTagDialog(FlowLayout parent) {
-                    if (tagList.size() == TAG_MAX_SIZE) {
-                        Toast.makeText(FeedActivity.this, "不好意思，已达标签数最大容量~", Toast.LENGTH_LONG).show();
-                        parent.getChildAt(TAG_MAX_SIZE).setVisibility(View.GONE);
-                        return;
-                    }
-
-                    //ToDo:这里无法转换，5.8号解决。
-                    final FeedTagView targetPlaceHolder = (FeedTagView) parent.getChildAt(tagList.size());
-                    final EditText et = new EditText(FeedActivity.this);
-                    new AlertDialog.Builder(FeedActivity.this).setTitle("添加标签")
-                            .setIcon(android.R.drawable.ic_dialog_info)
-                            .setView(et)
-                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    final String input = et.getText().toString();
-                                    if (input.equals("")) {
-                                        Toast.makeText(getApplicationContext(), "标签描述不能为空！", Toast.LENGTH_LONG).show();
-                                    } else {
-                                        HashMap<String, String> params = new HashMap<String, String>();
-                                        params.put("mid", String.valueOf(entryId));
-                                        params.put("content", input);
-                                        //TODO:加用户信息,这里的Uid是字符串，可能会出现异常
-                                        params.put("uid", "1");
-
-                                        RequestManager.getInstance(mContext).requestAsyn(ConstURL.TAG_ADD, RequestManager.TYPE_GET, params, new RequestManager.ReqCallBack<Object>() {
-                                            @Override
-                                            public void onReqSuccess(Object result) {
-                                                int tid = (int) result;
-                                                tagList.add(new Tag().setTid(tid).setMid(entryId).setContent(input).setUid(1));
-                                                targetPlaceHolder.getTv().setText(input);
-                                                targetPlaceHolder.setVisibility(View.VISIBLE);
-                                                Toast.makeText(FeedActivity.this, "好了~", Toast.LENGTH_SHORT).show();
-                                            }
-
-                                            @Override
-                                            public void onReqFailed(String errorMsg) {
-                                                Toast.makeText(FeedActivity.this, "完了朋友，现在添加不了...再试试吧", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                        dialog.dismiss();
-                                    }
-                                }
-                            })
-                            .setNegativeButton("取消", null)
-                            .show();
                 }
             });
         }
@@ -264,6 +275,22 @@ public class FeedActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    /**
+     * 删除tag时将显示的tag向前挤压，隐藏最后一个tag
+     *
+     * @param parent
+     * @param currentDisplayTagCount
+     * @param positionToBeDelete
+     */
+    private void squeezeDisplayTag(FlowLayout parent, int currentDisplayTagCount, int positionToBeDelete) {
+        for (int i = positionToBeDelete; i <= currentDisplayTagCount - 2; i++) {
+            FeedTagView current = (FeedTagView) ((FrameLayout) parent.getChildAt(i)).getChildAt(0);
+            FeedTagView next = (FeedTagView) ((FrameLayout) parent.getChildAt(i + 1)).getChildAt(0);
+            current.getTv().setText(next.getTv().getText());
+        }
+        parent.getChildAt(currentDisplayTagCount - 1).setVisibility(View.GONE);
     }
 
     private List<Weibo> parseResultToWeibo(Object result) {

@@ -2,6 +2,7 @@ package com.debug.xxw.pointbook.activity;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.Editable;
@@ -16,9 +17,15 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.debug.xxw.pointbook.R;
 import com.debug.xxw.pointbook.adapter.TextWatcherAdapter;
+import com.debug.xxw.pointbook.model.User;
+import com.debug.xxw.pointbook.net.ConstURL;
+import com.debug.xxw.pointbook.net.RequestManager;
+
+import java.util.HashMap;
 
 public class LoginDialogFragment extends DialogFragment implements View.OnClickListener,
         CompoundButton.OnCheckedChangeListener {
@@ -89,10 +96,41 @@ public class LoginDialogFragment extends DialogFragment implements View.OnClickL
         switch (view.getId()) {
             case R.id.btn_next:
                 loading.setVisibility(View.VISIBLE);
-                //判断用户是否存在
-//                VcodeDialogFragment dialogFragment = VcodeDialogFragment.newInstance(phone);
-//                dialogFragment.show(getFragmentManager(), "VcodeDialogFragment");
-//                dismiss();
+                HashMap<String, String> params = new HashMap<>();
+                params.put("email", mEtEmail.getText().toString());
+                params.put("password", mEtPwd.getText().toString());
+
+                RequestManager.getInstance(this.getActivity()).requestAsyn(ConstURL.USER_VERIFY, RequestManager.TYPE_GET, params, new RequestManager.ReqCallBack<Object>() {
+                    @Override
+                    public void onReqSuccess(Object result) {
+                        //登录成功或失败通过result判断
+                        User user = User.parseResult(result);
+                        if (user != null) {
+                            MainActivity.user = user;
+                            SharedPreferences sp = LoginDialogFragment.this.getActivity().getSharedPreferences("config", 0);
+                            if (User.saveUserSingleton(sp, user)) {
+                                Toast.makeText(LoginDialogFragment.this.getActivity(), "登录成功~", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(LoginDialogFragment.this.getActivity(), "一次性登录哈哈~", Toast.LENGTH_SHORT).show();
+                            }
+                            dismiss();
+                            //todo:刷新user_bar
+                            ((SettingActivity) LoginDialogFragment.this.getActivity()).refreshUserBar(user);
+                        } else {
+                            //账号或密码错误
+                            loading.setVisibility(View.GONE);
+                            Toast.makeText(LoginDialogFragment.this.getActivity(), "账号或密码错误！", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onReqFailed(String errorMsg) {
+                        //网络出错
+                        loading.setVisibility(View.GONE);
+                        Toast.makeText(LoginDialogFragment.this.getActivity(), "网络罢工了...请检查网络设置", Toast.LENGTH_LONG).show();
+                    }
+                });
+
                 break;
             case R.id.tv_register:
                 //注册

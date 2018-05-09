@@ -9,7 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +31,7 @@ import java.util.List;
  * @author xxw
  */
 public class SettingActivity extends AppCompatActivity {
+    private SettingView mSettingView;
     private List<HashMap<String, Object>> mListData;
     private final String FUN_NAME = "fun_name";
     private final String FUN_ICON = "fun_icon";
@@ -39,10 +43,24 @@ public class SettingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_setting);
         initListData();
         Bundle bundle = this.getIntent().getExtras();
+        //null 对象强制转换为类对象不会抛异常
         user = (User) bundle.getSerializable("user");
-        SettingView mSettingView = (SettingView) findViewById(R.id.setting_view);
+        mSettingView = (SettingView) findViewById(R.id.setting_view);
         mSettingView.setListAdapter(new SettingListAdapter());
         mSettingView.setUserAdapter(new UserDataAdapter());
+    }
+
+    public void refreshUserBar(User user) {
+        if (mSettingView != null) {
+            RelativeLayout bar = (RelativeLayout) ((GridView) ((LinearLayout) mSettingView.getChildAt(0)).getChildAt(0)).getChildAt(0);
+            CircleImageView head = (CircleImageView) bar.getChildAt(0);
+            TextView name = (TextView) bar.getChildAt(1);
+            TextView des = (TextView) bar.getChildAt(2);
+
+            Picasso.with(SettingActivity.this).load(user.getHeadimg()).error(R.drawable.defaulthead).into(head);
+            name.setText(user.getUsername());
+            des.setText(user.getDescribe());
+        }
     }
 
     public class SettingListAdapter extends BaseAdapter {
@@ -126,8 +144,13 @@ public class SettingActivity extends AppCompatActivity {
                 convertView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        LoginDialogFragment.newInstance("1304924151@qq.com")
-                                .show(getSupportFragmentManager(), "loginFragment");
+                        if (user == null) {
+                            LoginDialogFragment.newInstance("1304924151@qq.com").show(getSupportFragmentManager(), "loginFragment");
+                        } else {
+                            //TODO:进入用户个人中心
+                            Toast.makeText(SettingActivity.this, "进入个人中心", Toast.LENGTH_SHORT).show();
+                        }
+
                     }
                 });
             } else {
@@ -135,12 +158,12 @@ public class SettingActivity extends AppCompatActivity {
             }
             if (user == null) {
                 Picasso.with(SettingActivity.this).load(R.mipmap.ic_launcher_round).error(R.drawable.defaulthead).into(holder.head);
-                holder.username.setText("__点击登录");
+                holder.username.setText("_点击登录");
                 holder.describe.setText(" click to login");
             } else {
-                Picasso.with(SettingActivity.this).load("https://t12.baidu.com/it/u=1379413910,591030782&fm=173&app=25&f=JPEG?w=550&h=309&s=5EAE8744760A714306AB51C7030050AB").error(R.drawable.defaulthead).into(holder.head);
-                holder.username.setText("xxw");
-                holder.describe.setText("我的app由大自然创造");
+                Picasso.with(SettingActivity.this).load(user.getHeadimg()).error(R.drawable.defaulthead).into(holder.head);
+                holder.username.setText(user.getUsername());
+                holder.describe.setText(user.getDescribe());
             }
 
             return convertView;
@@ -151,9 +174,7 @@ public class SettingActivity extends AppCompatActivity {
         private CircleImageView head;
         private TextView username;
         private TextView describe;
-
     }
-
 
     public void initListData() {
         mListData = new ArrayList<>();
@@ -184,7 +205,7 @@ public class SettingActivity extends AppCompatActivity {
         mListData.add(map6);
 
         HashMap<String, Object> map7 = new HashMap<>(2);
-        map7.put(FUN_NAME, "关于我");
+        map7.put(FUN_NAME, "退出");
         map7.put(FUN_ICON, new LetterDrawable("I", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
         mListData.add(map7);
     }

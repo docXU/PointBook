@@ -3,14 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="10dp"
-    android:layout_marginEnd="10dp">
+    android:layout_marginEnd="10dp"
+    android:background="@drawable/user_bar_corners">
 
     <com.debug.xxw.pointbook.viewmodel.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/userhead"
         android:layout_width="60dp"
         android:layout_height="60dp"
         app:civ_border_color="#FFFFFF"
-        app:civ_border_width="2dp" />
+        app:civ_border_width="2dp"
+        android:layout_marginStart="10dp" />
 
     <TextView
         android:id="@+id/username"
@@ -18,7 +20,7 @@
         android:layout_height="wrap_content"
         android:text="XXW"
         android:textStyle="bold"
-        android:layout_marginStart="80dp"
+        android:layout_marginStart="90dp"
         android:textSize="30sp"
         android:textColor="@color/white" />
 
@@ -27,10 +29,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="what the fuck"
-        android:layout_marginStart="80dp"
+        android:layout_marginStart="90dp"
         android:textSize="14sp"
         android:textColor="@color/white"
         android:layout_marginTop="35dp" />
 
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="35dp"
+        android:layout_marginEnd="20dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/right_black" />
 
 </RelativeLayout>

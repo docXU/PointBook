@@ -136,18 +136,13 @@ public class SettingView extends ViewGroup {
         mHeaderView = new LinearLayout(context);
         mHeaderView.setOrientation(LinearLayout.VERTICAL);
         mHeaderView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        mHeaderView.setPadding(0, calPxFromDp(10), 0, calPxFromDp(10));
-
-        LinearLayout linearLayout = new LinearLayout(context);
-        linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        linearLayout.setPadding(0, calPxFromDp(15), 0, calPxFromDp(15));
+        mHeaderView.setPadding(0, calPxFromDp(10), 0, calPxFromDp(20));
 
         mGridView = new GridView(context);
         mGridView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         mGridView.setNumColumns(1);
         mGridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
-        linearLayout.addView(mGridView);
-        mHeaderView.addView(linearLayout);
+        mHeaderView.addView(mGridView);
         addView(mHeaderView);
     }
 

@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -52,11 +53,17 @@ public class MainActivity extends AppCompatActivity implements HintDialogFragmen
     FloatingActionButton mFab;
     RecommendSearchFragment searchFragment;
     RelativeLayout searchStatusBar;
+    //TODO：静态用户对象保持会话，SharePrefrence本地持久登录信息
+    public static User user = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //读取本地用户信息
+        SharedPreferences sp = getSharedPreferences("config", 0);
+        user = User.getUserSingleton(sp);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.app_name);
@@ -65,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements HintDialogFragmen
         toolbar.setOnMenuItemClickListener(this);
         searchFragment.setOnSearchClickListener(this);
 
-        //隐藏搜索状态栏
+        //隐藏搜索状态栏事件初始化
         searchStatusBar = (RelativeLayout) findViewById(R.id.search_status_bar);
         (searchStatusBar.getChildAt(1)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements HintDialogFragmen
         public void onAnimationEnd(Animator animation) {
             mFab.setVisibility(View.GONE);
             Bundle bundle = new Bundle();
-            bundle.putSerializable("user", null);
+            bundle.putSerializable("user", user);
             Intent i = new Intent(MainActivity.this, SettingActivity.class);
             i.putExtras(bundle);
             startActivity(i);

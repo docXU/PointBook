@@ -180,6 +180,7 @@ public class MapController implements ClusterRender, ClusterClickListener {
         mAMap.setOnMyLocationChangeListener(new AMap.OnMyLocationChangeListener() {
             @Override
             public void onMyLocationChange(Location location) {
+                if (mMarkerNetter == null) return;
                 mLocation = new LatLng(location.getLatitude(), location.getLongitude());
                 if (needMoveToCenter) {
                     needMoveToCenter = false;

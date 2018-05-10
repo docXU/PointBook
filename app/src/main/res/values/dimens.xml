@@ -5,4 +5,5 @@
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="fab_margin">30dp</dimen>
+    <dimen name="profile_item_margin_start">15dp</dimen>
 </resources>

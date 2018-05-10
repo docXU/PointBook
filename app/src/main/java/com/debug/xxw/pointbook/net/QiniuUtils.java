@@ -34,7 +34,7 @@ public class QiniuUtils {
         uploadComItemCount = 0;
     }
 
-    public void uploadFile(String path, UpCompletionHandler upCompletionHandler) {
+    public static void uploadFile(String path, UpCompletionHandler upCompletionHandler) {
         if ("".equals(token)) {
             queryToken();
         }
@@ -47,7 +47,7 @@ public class QiniuUtils {
         uploadManager.put(data, null, token, upCompletionHandler, null);
     }
 
-    public void queryToken() {
+    public static void queryToken() {
         final String accessKey = "7CP2LqebbmZo8LkFkV51hypP3dLPa6-_jpkTgZwt";
         final String secretKey = "k4f_rL4L4rwQu6bnvcoJxg70AXL2CnRpA3fwK9zW";
         String bucket = "pointbook1";

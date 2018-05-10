@@ -7,30 +7,32 @@
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
     android:layout_marginTop="5dp"
-    android:clickable="true"
     card_view:cardBackgroundColor="@color/white"
-    card_view:cardCornerRadius="2dp"
+    card_view:cardCornerRadius="3dp"
     card_view:cardElevation="3dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
         android:padding="10dp">
 
         <TextView
+            android:id="@+id/edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="编辑"
-            android:textSize="16sp"
-            android:layout_alignParentEnd="true" />
+            android:textSize="18sp"
+            android:textColor="#FF344ADA"
+            android:layout_alignParentEnd="true"
+            android:visibility="gone" />
 
         <com.debug.xxw.pointbook.viewmodel.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/userPicture"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_centerHorizontal="true"
-            app:civ_border_color="#FFFFFF"
+            android:layout_marginTop="30dp"
+            app:civ_border_color="#968f8f8f"
             app:civ_border_width="2dp" />
 
         <TextView
@@ -58,7 +60,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:layout_below="@+id/last_interaction"
             android:background="@color/bar_grey" />
 
@@ -66,7 +68,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/last_interaction"
-            android:paddingLeft="20dp"
+            android:paddingStart="20dp"
+            android:paddingTop="15dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -154,7 +157,7 @@
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:background="@drawable/icon_man" />
+                    android:background="@drawable/icon_women" />
 
                 <TextView
                     android:layout_width="wrap_content"

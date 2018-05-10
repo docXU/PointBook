@@ -1,9 +1,11 @@
 package com.debug.xxw.pointbook.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.debug.xxw.pointbook.R;
+import com.debug.xxw.pointbook.model.Interaction;
 import com.debug.xxw.pointbook.model.LetterDrawable;
 import com.debug.xxw.pointbook.model.User;
 import com.debug.xxw.pointbook.viewmodel.CircleImageView;
@@ -36,7 +39,8 @@ public class SettingActivity extends AppCompatActivity {
     private final String FUN_NAME = "fun_name";
     private final String FUN_ICON = "fun_icon";
     private User user;
-    private ListViewHolder Overlaystatus;
+
+    public static int requestCode = 105;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +55,12 @@ public class SettingActivity extends AppCompatActivity {
 
         mSettingView.setListAdapter(new SettingListAdapter());
         mSettingView.setUserAdapter(new UserDataAdapter());
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        refreshUserBar(MainActivity.user);
     }
 
     public void refreshUserBar(User user) {
@@ -157,6 +167,18 @@ public class SettingActivity extends AppCompatActivity {
                         } else {
                             //TODO:进入用户个人中心
                             Toast.makeText(SettingActivity.this, "进入个人中心", Toast.LENGTH_SHORT).show();
+                            try {
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("user", MainActivity.user);
+                                bundle.putString("last_interaction", Interaction.ENTER_PROFILE);
+                                Intent intent = new Intent().setClass(SettingActivity.this, ProfileActivity.class);
+                                intent.putExtras(bundle);
+                                SettingActivity.this.startActivityForResult(intent, requestCode);
+                            } catch (Exception e) {
+                                Log.e("SettingActivity", e.getMessage());
+                                e.printStackTrace();
+                            }
+
                         }
                     }
                 });

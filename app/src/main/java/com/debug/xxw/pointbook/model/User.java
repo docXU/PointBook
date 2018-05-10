@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.util.Date;
 
 public class User implements Serializable {
     private int id;
@@ -135,7 +137,7 @@ public class User implements Serializable {
             oos.writeObject(user);
             String base64Student = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
             oos.close();
-            return editor.putString("user", base64Student).commit();
+            return editor.putString("user", base64Student).putLong("expires", new Date().getTime()).commit();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -143,6 +145,12 @@ public class User implements Serializable {
     }
 
     public static User getUserSingleton(SharedPreferences sp) {
+        Long expires = sp.getLong("expires", 0);
+        //一天过期，避免多机登录修改用户资料时导致数据不同步。
+        if (new Date().getTime() - expires > 86400) {
+            return null;
+        }
+
         String studentString = sp.getString("user", "");
 
         if (studentString.isEmpty()) return null;
@@ -177,7 +185,7 @@ public class User implements Serializable {
                     .setEmail(user.getString("email"))
                     .setHeadimg(user.getString("headimg"))
                     .setId(Integer.parseInt(user.getString("id")))
-                    .setSex(user.getString("sex"))
+                    .setSex(user.getInt("sex") == 0 ? "女" : "男")
                     .setTelephone(user.getString("telephone"))
                     .setWechat_id(user.getString("wechat_id"))
                     .setWeibo_name(user.getString("weibo_name"));

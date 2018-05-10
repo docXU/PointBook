@@ -36,16 +36,19 @@ public class SettingActivity extends AppCompatActivity {
     private final String FUN_NAME = "fun_name";
     private final String FUN_ICON = "fun_icon";
     private User user;
+    private ListViewHolder Overlaystatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        initListData();
         Bundle bundle = this.getIntent().getExtras();
-        //null 对象强制转换为类对象不会抛异常
-        user = (User) bundle.getSerializable("user");
         mSettingView = (SettingView) findViewById(R.id.setting_view);
+        mSettingView.setCloseOverlay(bundle.getBoolean("closeOverlay"));
+        user = (User) bundle.getSerializable("user");
+        initListData();
+        //null 对象强制转换为类对象不会抛异常
+
         mSettingView.setListAdapter(new SettingListAdapter());
         mSettingView.setUserAdapter(new UserDataAdapter());
     }
@@ -82,7 +85,7 @@ public class SettingActivity extends AppCompatActivity {
         @SuppressLint("InflateParams")
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            ListViewHolder holder;
+            final ListViewHolder holder;
             if (convertView == null) {
                 convertView = LayoutInflater.from(SettingActivity.this).inflate(R.layout.setting_listitem, null);
                 holder = new ListViewHolder();
@@ -93,7 +96,12 @@ public class SettingActivity extends AppCompatActivity {
                 ((AdapterView) parent).setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Toast.makeText(SettingActivity.this, "点击了列元素", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(SettingActivity.this, "点击了列元素" + position, Toast.LENGTH_SHORT).show();
+                        if (position == 1) {
+                            boolean currentStatus = mSettingView.isCloseOverlay();
+                            mSettingView.setCloseOverlay(!currentStatus);
+                            ((TextView) ((LinearLayout) view).getChildAt(1)).setText(currentStatus ? "关闭图层" : "打开图层");
+                        }
                     }
                 });
             } else {
@@ -144,7 +152,7 @@ public class SettingActivity extends AppCompatActivity {
                 convertView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (user == null) {
+                        if (MainActivity.user == null) {
                             LoginDialogFragment.newInstance("1304924151@qq.com").show(getSupportFragmentManager(), "loginFragment");
                         } else {
                             //TODO:进入用户个人中心
@@ -185,7 +193,7 @@ public class SettingActivity extends AppCompatActivity {
         mListData.add(map1);
 
         HashMap<String, Object> map2 = new HashMap<>(2);
-        map2.put(FUN_NAME, "关闭图层");
+        map2.put(FUN_NAME, mSettingView.isCloseOverlay() ? "打开图层" : "关闭图层");
         map2.put(FUN_ICON, new LetterDrawable("P", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
         mListData.add(map2);
 

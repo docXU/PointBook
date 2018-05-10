@@ -29,6 +29,7 @@ import com.amap.api.maps.MapView;
 import com.debug.xxw.pointbook.R;
 import com.debug.xxw.pointbook.map.MapController;
 import com.debug.xxw.pointbook.map.cluster.ClusterItem;
+import com.debug.xxw.pointbook.map.cluster.ClusterOverlay;
 import com.debug.xxw.pointbook.model.RegionItem;
 import com.debug.xxw.pointbook.model.Tag;
 import com.debug.xxw.pointbook.model.User;
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements HintDialogFragmen
     RelativeLayout searchStatusBar;
     //TODO：静态用户对象保持会话，SharePrefrence本地持久登录信息
     public static User user = null;
+    private boolean closeOverlay = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +123,10 @@ public class MainActivity extends AppCompatActivity implements HintDialogFragmen
     public void OnSearchClick(String keyword) {
 
         //todo: 显示相关的cluster，做出状态栏表示当前搜索词。
+        if (mMapController.getmClusterOverlay() == null) {
+            Toast.makeText(MainActivity.this, "网络出错，请稍后再试~", Toast.LENGTH_LONG).show();
+            return;
+        }
         List<ClusterItem> clusters = mMapController.getmClusterOverlay().getmClusterItems();
         List<ClusterItem> filteredClusters = new LinkedList<>();
 
@@ -183,9 +189,10 @@ public class MainActivity extends AppCompatActivity implements HintDialogFragmen
             mFab.setVisibility(View.GONE);
             Bundle bundle = new Bundle();
             bundle.putSerializable("user", user);
+            bundle.putBoolean("closeOverlay", closeOverlay);
             Intent i = new Intent(MainActivity.this, SettingActivity.class);
             i.putExtras(bundle);
-            startActivity(i);
+            startActivityForResult(i, 100);
         }
 
         @Override
@@ -245,6 +252,19 @@ public class MainActivity extends AppCompatActivity implements HintDialogFragmen
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data != null && data.getExtras() != null && requestCode == 100) {
+            Bundle bundle = data.getExtras();
+            closeOverlay = bundle.getBoolean("closeOverlay");
+            ClusterOverlay ins = mMapController.getmClusterOverlay();
+            if (ins == null) {
+                return;
+            }
+            if (closeOverlay) {
+                ins.hiddenOverlay();
+            } else {
+                ins.showOverlay();
+            }
+        }
         mMapController.refreshMarkers();
         super.onActivityResult(requestCode, resultCode, data);
     }

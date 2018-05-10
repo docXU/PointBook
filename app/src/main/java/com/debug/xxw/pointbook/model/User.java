@@ -154,7 +154,7 @@ public class User implements Serializable {
         try {
             ObjectInputStream ois = new ObjectInputStream(bais);
             user = (User) ois.readObject();
-            Log.e("------------->", "" + user.getAddress() + user.getAge() + user.getUsername());
+            Log.e("------------->", "" + user.getDescribe() + user.getAge() + user.getUsername());
         } catch (Exception e) {
             e.printStackTrace();
         }

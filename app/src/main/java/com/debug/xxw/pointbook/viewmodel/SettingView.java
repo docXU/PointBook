@@ -5,22 +5,18 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.text.InputType;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
-import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.SearchView;
-import android.widget.Toast;
 
-import com.debug.xxw.pointbook.R;
 import com.debug.xxw.pointbook.utils.ElasticOutInterpolator;
 
 /**
@@ -33,6 +29,17 @@ public class SettingView extends ViewGroup {
     private GridView mGridView;
     private FloatingActionButton mFab;
     private float mDensity = 1;
+
+    public boolean isCloseOverlay() {
+        return closeOverlay;
+    }
+
+    public SettingView setCloseOverlay(boolean closeOverlay) {
+        this.closeOverlay = closeOverlay;
+        return this;
+    }
+
+    private boolean closeOverlay;
 
     public SettingView(Context context) {
         this(context, null);
@@ -162,12 +169,12 @@ public class SettingView extends ViewGroup {
     public void setListAdapter(BaseAdapter adapter) {
         if (null != mListView) {
             mListView.setAdapter(adapter);
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Toast.makeText(mContext, "点击了元素", Toast.LENGTH_SHORT).show();
-                }
-            });
+//            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                @Override
+//                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                    Toast.makeText(mContext, "点击了元素", Toast.LENGTH_SHORT).show();
+//                }
+//            });
         }
     }
 
@@ -244,7 +251,14 @@ public class SettingView extends ViewGroup {
 
         @Override
         public void onAnimationEnd(Animator animation) {
-            ((Activity) mContext).finish();
+            Activity settingActivity = (Activity) mContext;
+            Intent intent = settingActivity.getIntent();
+            Bundle data = new Bundle();
+            data.putBoolean("closeOverlay", closeOverlay);
+            intent.putExtras(data);
+            // 设置SecondActivity的结果码(resultCode)，并设置在当前结束后退回去的Activity
+            settingActivity.setResult(100, intent);
+            settingActivity.finish();
         }
 
         @Override

@@ -314,7 +314,9 @@ public class MapController implements ClusterRender, ClusterClickListener {
      * 刷新Markers
      */
     public void refreshMarkers() {
-        mMarkerNetter.queryMarker(lastLocation, activityScope);
+        if (lastLocation != null) {
+            mMarkerNetter.queryMarker(lastLocation, activityScope);
+        }
     }
 
     /**

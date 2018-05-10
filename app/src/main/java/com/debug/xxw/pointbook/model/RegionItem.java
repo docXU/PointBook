@@ -12,7 +12,7 @@ public class RegionItem implements ClusterItem, Cloneable, Serializable {
     private LatLng mLatLng;
     private String mTitle;
     private String mId;
-    private List<Tag> tags = null;
+    private List<Tag> tags;
 
     public RegionItem(String id, LatLng latLng, String title) {
         mId = id;

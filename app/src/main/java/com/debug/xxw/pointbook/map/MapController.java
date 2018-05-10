@@ -261,9 +261,8 @@ public class MapController implements ClusterRender, ClusterClickListener {
 
                             LatLng latLng = new LatLng(lat, lon, false);
                             RegionItem regionItem = new RegionItem(sid, latLng, title);
-                            if (tags.size() > 0) {
-                                regionItem.setTags(tags);
-                            }
+                            regionItem.setTags(tags);
+
                             items.add(regionItem);
                         } catch (JSONException je) {
                             Log.e(TAG, "json对象不存在某个键");
@@ -371,7 +370,7 @@ public class MapController implements ClusterRender, ClusterClickListener {
         }
         LatLngBounds latLngBounds = builder.build();
         if (clusterItems.size() > 1) {
-            mAMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 200));
+            mAMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 150));
         } else {
             goToWeibo((RegionItem) clusterItems.get(0));
         }
@@ -393,7 +392,7 @@ public class MapController implements ClusterRender, ClusterClickListener {
         bundle.putString("type", "marker");
         bundle.putSerializable("tags", (Serializable) item.getTags());
         intent.putExtras(bundle);
-        //TODO:设置区分代码requestCode用于和SettingActivity 做区分
+
         mainActivity.startActivityForResult(intent, 0);
     }
 

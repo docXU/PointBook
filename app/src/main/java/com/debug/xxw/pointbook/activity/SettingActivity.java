@@ -158,7 +158,6 @@ public class SettingActivity extends AppCompatActivity {
                             //TODO:进入用户个人中心
                             Toast.makeText(SettingActivity.this, "进入个人中心", Toast.LENGTH_SHORT).show();
                         }
-
                     }
                 });
             } else {

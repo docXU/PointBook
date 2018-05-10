@@ -58,6 +58,7 @@ public class FeedActivity extends AppCompatActivity {
     private List<Tag> tagList;
 
     private static int TAG_MAX_SIZE = 9;
+    private boolean showGiftTag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +85,12 @@ public class FeedActivity extends AppCompatActivity {
             TagFlowLayout mTagFlowLayout = (TagFlowLayout) findViewById(R.id.id_flowlayout);
             mTagFlowLayout.setVisibility(View.VISIBLE);
             final List<FeedTagView> displayTagViews = new LinkedList<>();
+            if (0 == tagList.size()) {
+                showGiftTag = true;
+                FeedTagView gift = new FeedTagView(mContext, null);
+                gift.getTv().setText("四大皆空");
+                displayTagViews.add(gift);
+            }
 
             //tag不能大于9个
             for (Tag tag : tagList) {
@@ -93,7 +100,7 @@ public class FeedActivity extends AppCompatActivity {
             }
 
             //添加预留位
-            for (int i = tagList.size() - 1; i < TAG_MAX_SIZE; i++) {
+            for (int i = showGiftTag ? 1 : tagList.size(); i < TAG_MAX_SIZE; i++) {
                 FeedTagView placeHolder = new FeedTagView(mContext, null);
                 placeHolder.setVisibility(View.GONE);
                 displayTagViews.add(placeHolder);
@@ -160,6 +167,9 @@ public class FeedActivity extends AppCompatActivity {
                                                     targetPlaceHolder.getTv().setText(input);
                                                     targetPlaceHolder.setVisibility(View.VISIBLE);
                                                     tagViewHolder.setVisibility(View.VISIBLE);
+                                                    if (showGiftTag) {
+                                                        showGiftTag = false;
+                                                    }
                                                     Toast.makeText(FeedActivity.this, "好了~", Toast.LENGTH_SHORT).show();
                                                 } catch (Exception e) {
                                                     Log.e(FeedActivity.this.getLocalClassName(), e.getMessage());
@@ -182,6 +192,10 @@ public class FeedActivity extends AppCompatActivity {
                 }
 
                 private void showTagDeleteDialog(final int position, final FlowLayout parent) {
+                    if (showGiftTag && position == 0) {
+                        Toast.makeText(FeedActivity.this, "这个tag雷打不动的~", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     final Tag target = tagList.get(position);
                     AlertDialog dialog = new AlertDialog.Builder(FeedActivity.this)
                             //.setIcon(R.mipmap.icon)

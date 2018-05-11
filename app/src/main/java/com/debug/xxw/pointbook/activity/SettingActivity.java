@@ -2,6 +2,7 @@ package com.debug.xxw.pointbook.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -70,6 +71,13 @@ public class SettingActivity extends AppCompatActivity {
             TextView name = (TextView) bar.getChildAt(1);
             TextView des = (TextView) bar.getChildAt(2);
 
+            if (user == null) {
+                Picasso.with(SettingActivity.this).load(R.mipmap.ic_launcher_round).error(R.drawable.defaulthead).into(head);
+                name.setText("_点击登录");
+                des.setText(" click to login");
+                return;
+            }
+
             Picasso.with(SettingActivity.this).load(user.getHeadimg()).error(R.drawable.defaulthead).into(head);
             name.setText(user.getUsername());
             des.setText(user.getDescribe());
@@ -113,7 +121,12 @@ public class SettingActivity extends AppCompatActivity {
                             ((TextView) ((LinearLayout) view).getChildAt(1)).setText(currentStatus ? "关闭图层" : "打开图层");
                         } else if (position == 3) {
                             MainActivity.anonymity_me = !MainActivity.anonymity_me;
-                            ((TextView) ((LinearLayout) view).getChildAt(1)).setText(MainActivity.anonymity_me ? "恢复身份模式" : "进入匿名发布");
+                            ((TextView) ((LinearLayout) view).getChildAt(1)).setText(MainActivity.anonymity_me ? "恢复身份模式" : "进入匿名模式");
+                        } else if (position == 5) {
+                            MainActivity.user = null;
+                            SharedPreferences sp = getSharedPreferences("config", 0);
+                            User.saveUserSingleton(sp, null);
+                            refreshUserBar(null);
                         }
                     }
                 });
@@ -227,7 +240,7 @@ public class SettingActivity extends AppCompatActivity {
         mListData.add(map4);
 
         HashMap<String, Object> map5 = new HashMap<>(2);
-        map5.put(FUN_NAME, MainActivity.anonymity_me ? "恢复身份模式" : "进入匿名发布");
+        map5.put(FUN_NAME, MainActivity.anonymity_me ? "恢复身份模式" : "进入匿名模式");
         map5.put(FUN_ICON, new LetterDrawable("T", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
         mListData.add(map5);
 
@@ -237,9 +250,14 @@ public class SettingActivity extends AppCompatActivity {
         mListData.add(map6);
 
         HashMap<String, Object> map7 = new HashMap<>(2);
-        map7.put(FUN_NAME, "退出");
+        map7.put(FUN_NAME, "注销账户");
         map7.put(FUN_ICON, new LetterDrawable("I", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
         mListData.add(map7);
+
+        HashMap<String, Object> map8 = new HashMap<>(2);
+        map8.put(FUN_NAME, "退出");
+        map8.put(FUN_ICON, new LetterDrawable("I", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
+        mListData.add(map8);
     }
 
 

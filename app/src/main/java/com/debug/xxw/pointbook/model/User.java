@@ -132,6 +132,10 @@ public class User implements Serializable {
             SharedPreferences.Editor editor = sp.edit();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
+            if (user == null) {
+                return editor.putString("user", "").putLong("expires", 0).commit();
+            }
+
             ObjectOutputStream oos = new ObjectOutputStream(baos);
             oos.writeObject(user);
             String base64Student = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);

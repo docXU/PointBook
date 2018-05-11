@@ -512,7 +512,7 @@ public class MapController implements ClusterRender, ClusterClickListener {
             if (bitmapDrawable == null) {
                 bitmapDrawable =
                         mainContext.getResources().getDrawable(
-                                R.drawable.icon_openmap_mark_small);
+                                R.drawable.icon_marker_30_red);
                 mBackDrawAbles.put(1, bitmapDrawable);
             }
             return bitmapDrawable;

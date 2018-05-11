@@ -13,5 +13,6 @@ public class ConstURL {
 
     public static String USER_GET = "user/get";
     public static String USER_VERIFY = "user/verify";
+    public static String USER_REGISTER = "user/register";
     public static String USER_UPDATE = "user/update";
 }

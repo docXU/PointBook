@@ -134,6 +134,8 @@ public class LoginDialogFragment extends DialogFragment implements View.OnClickL
                 break;
             case R.id.tv_register:
                 //注册
+                registerDialogFragment rdf = new registerDialogFragment();
+                rdf.show(getFragmentManager(), "registerdailog");
                 dismiss();
                 break;
             case R.id.btn_close:

@@ -95,6 +95,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             }
         });
 
+        ((EditText) findViewById(R.id.username)).setText(user.getUsername());
         ((EditText) findViewById(R.id.telephone)).setText(user.getTelephone());
         ((EditText) findViewById(R.id.wechat_id)).setText(user.getWechat_id());
         ((EditText) findViewById(R.id.weibo_name)).setText(user.getWechat_id());
@@ -167,6 +168,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         }
 
         params.put("id", "" + user.getId());
+        params.put("username", ((EditText) findViewById(R.id.username)).getText().toString());
         params.put("telephone", ((EditText) findViewById(R.id.telephone)).getText().toString());
         params.put("wechat_id", ((EditText) findViewById(R.id.wechat_id)).getText().toString());
         params.put("weibo_name", ((EditText) findViewById(R.id.weibo_name)).getText().toString());

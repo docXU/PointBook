@@ -5,24 +5,28 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.debug.xxw.pointbook.R;
 import com.debug.xxw.pointbook.model.Weibo;
+import com.debug.xxw.pointbook.net.ConstURL;
+import com.debug.xxw.pointbook.net.RequestManager;
+import com.debug.xxw.pointbook.net.WeiboNetter;
 import com.debug.xxw.pointbook.viewmodel.CircleImageView;
 import com.debug.xxw.pointbook.viewmodel.NineGridTestLayout;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-/**
- * Created by Crazyfzw on 2016/5/19.
- */
-
 public class WeiboListViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
     private List<Weibo> mList;
+
+    public static String head_view = "head_view";
+    private OnItemClickListener onLikeClickListener;
 
     public WeiboListViewAdapter(Context context, List<Weibo> list) {
         this.context = context;
@@ -42,27 +46,65 @@ public class WeiboListViewAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        CommunityViewHolder mViewHolder = ((CommunityViewHolder) holder);
-        Picasso.with(context).load(R.drawable.defaulthead).error(R.mipmap.ic_launcher).into(mViewHolder.userPic);
-        mViewHolder.username.setText(mList.get(position).getUsername());
-        mViewHolder.publicTime.setText(mList.get(position).getPublicTime());
-        mViewHolder.from.setText(mList.get(position).getFrom());
-        mViewHolder.textContent.setText(mList.get(position).getContent());
-        mViewHolder.recentLike.setText(mList.get(position).getRecentLike());
-        mViewHolder.recentShare.setText(mList.get(position).getRecentShare());
-        mViewHolder.recentComment.setText(mList.get(position).getRecentComment());
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+        final CommunityViewHolder mViewHolder = ((CommunityViewHolder) holder);
+        if (!mList.get(position).getHeadimg().isEmpty()) {
+            Picasso.with(context).load(mList.get(position).getHeadimg()).error(R.mipmap.ic_launcher).into(mViewHolder.userPic);
+        } else {
+            Picasso.with(context).load(R.drawable.defaulthead).error(R.mipmap.ic_launcher).into(mViewHolder.userPic);
+        }
         mViewHolder.nicePic.setIsShowAll(mList.get(position).getContentImgs().isShowAll);
         mViewHolder.nicePic.setUrlList(mList.get(position).getContentImgs().urlList);
+        mViewHolder.username.setText(mList.get(position).getUsername());
+        mViewHolder.publicTime.setText(mList.get(position).getPublicTime());
+        mViewHolder.msglevel.setText(mList.get(position).getMsglevel());
+        mViewHolder.textContent.setText(mList.get(position).getContent());
+        mViewHolder.recentLike.setText(mList.get(position).getRecentLike());
+        mViewHolder.recentLow.setText(mList.get(position).getRecentLow());
+        mViewHolder.recentComment.setText(mList.get(position).getRecentComment());
+        if (onLikeClickListener != null) {
+            mViewHolder.recentLike.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+                    onLikeClickListener.onClick(position, WeiboNetter.like_counter);
+                }
+            });
+            mViewHolder.recentLow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+                    onLikeClickListener.onClick(position, WeiboNetter.low_counter);
+                }
+            });
+            mViewHolder.userPic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onLikeClickListener.onClick(position, head_view);
+                }
+            });
+        }
     }
 
     @Override
     public int getItemCount() {
-        return getListSize(mList);
+        if (mList == null) {
+            return 0;
+        }
+        return mList.size();
     }
 
     public void setList(List<Weibo> list) {
         mList = list;
+        this.notifyDataSetChanged();
+    }
+
+    public void changeCounter(int position, String count, String who) {
+        if (who.equals(WeiboNetter.like_counter)) {
+            mList.get(position).setRecentLike(count);
+        } else if (who.equals(WeiboNetter.low_counter)) {
+            mList.get(position).setRecentLow(count);
+        } else {
+            mList.get(position).setRecentComment(count);
+        }
         this.notifyDataSetChanged();
     }
 
@@ -71,11 +113,11 @@ public class WeiboListViewAdapter extends RecyclerView.Adapter<RecyclerView.View
         CircleImageView userPic;
         TextView username;
         TextView publicTime;
-        TextView from;
+        TextView msglevel;
         TextView textContent;
         NineGridTestLayout nicePic;
         TextView recentLike;
-        TextView recentShare;
+        TextView recentLow;
         TextView recentComment;
 
         CommunityViewHolder(View itemView) {
@@ -85,20 +127,19 @@ public class WeiboListViewAdapter extends RecyclerView.Adapter<RecyclerView.View
             userPic = itemView.findViewById(R.id.userPicture);
             username = itemView.findViewById(R.id.userName);
             publicTime = itemView.findViewById(R.id.publicTime);
-            from = itemView.findViewById(R.id.from);
+            msglevel = itemView.findViewById(R.id.from);
             textContent = itemView.findViewById(R.id.textContent);
             recentLike = itemView.findViewById(R.id.recent_like);
-            recentShare = itemView.findViewById(R.id.recent_share);
+            recentLow = itemView.findViewById(R.id.recent_low);
             recentComment = itemView.findViewById(R.id.recent_comment);
-
         }
     }
 
-    private int getListSize(List<Weibo> list) {
-        if (list == null || list.size() == 0) {
-            return 0;
-        }
-        return list.size();
+    public interface OnItemClickListener {
+        void onClick(int positionm, String who);
     }
 
+    public void setOnLikeClickListener(OnItemClickListener onItemClickListener) {
+        this.onLikeClickListener = onItemClickListener;
+    }
 }

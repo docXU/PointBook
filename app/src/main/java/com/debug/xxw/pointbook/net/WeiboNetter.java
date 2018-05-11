@@ -13,32 +13,41 @@ import java.util.Map;
  */
 
 public class WeiboNetter {
-    private final String TAG = this.getClass().getSimpleName();
-    private final Context mContext;
 
-    public WeiboNetter(Context c) { mContext  = c;}
+    //字段
+    public static String like_counter = "likecount";
+    public static String low_counter = "lowcount";
+    public static String collect_counter = "commentcount";
 
-    public void queryWeiboList(String markerId, RequestManager.ReqCallBack c){
+    public static void queryWeiboList(Context mContext, String markerId, RequestManager.ReqCallBack c) {
         HashMap<String, String> params = new HashMap<>();
         params.put("entryId", markerId);
 
         RequestManager.getInstance(mContext).requestAsyn(ConstURL.WEIBO_GET, RequestManager.TYPE_GET, params, c);
     }
 
-    public void addWeibo(String entryId, Weibo weibo, RequestManager.ReqCallBack c){
+    public static void addWeibo(Context mContext, String entryId, Weibo weibo, RequestManager.ReqCallBack c) {
         HashMap<String, String> params = new HashMap<>();
         params.put("entryId", entryId);
         params.put("username", weibo.getUsername());
-        params.put("headimgurl", "");
+        params.put("uid", weibo.getUserId());
+        params.put("headimg", weibo.getHeadimg());
         params.put("content", weibo.getContent());
-        params.put("fromwhere", weibo.getFrom());
-        params.put("picCount", weibo.getContentImgs().urlList.size()+"");
+        params.put("picCount", weibo.getContentImgs().urlList.size() + "");
 
-        for(Map.Entry<Integer,String> keyvalue : weibo.getContentImgs().remoteUrlList.entrySet()){
-            params.put("pic"+keyvalue.getKey(), keyvalue.getValue());
-            Log.i(TAG, keyvalue.getValue());
+        for (Map.Entry<Integer, String> keyvalue : weibo.getContentImgs().remoteUrlList.entrySet()) {
+            params.put("pic" + keyvalue.getKey(), keyvalue.getValue());
+            Log.i("WeiboNetter", keyvalue.getValue());
         }
 
         RequestManager.getInstance(mContext).requestAsyn(ConstURL.WEIBO_ADD, RequestManager.TYPE_GET, params, c);
+    }
+
+    public static void incCounter(Context mContext, String counter_type, String weibo_id, RequestManager.ReqCallBack c) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("wid", weibo_id);
+        params.put("counter_type", counter_type);
+
+        RequestManager.getInstance(mContext).requestAsyn(ConstURL.WEIBO_COUNTER, RequestManager.TYPE_GET, params, c);
     }
 }

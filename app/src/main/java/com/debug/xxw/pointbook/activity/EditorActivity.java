@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.debug.xxw.pointbook.R;
 import com.debug.xxw.pointbook.adapter.GridImageAdapter;
 import com.debug.xxw.pointbook.model.NineGridModel;
+import com.debug.xxw.pointbook.model.User;
 import com.debug.xxw.pointbook.model.Weibo;
 import com.debug.xxw.pointbook.net.QiniuUtils;
 import com.debug.xxw.pointbook.net.RequestManager;
@@ -61,7 +62,6 @@ public class EditorActivity extends AppCompatActivity {
     private Weibo newWeiboInstance = new Weibo();
 
     private PerformEdit mPerformEdit;
-    private WeiboNetter mWeiboNetter;
     private QiniuUtils mQiniuUtils = new QiniuUtils();
     private Bundle b;
     String[] c = new String[]{
@@ -77,8 +77,6 @@ public class EditorActivity extends AppCompatActivity {
         initView();
         b = getIntent().getExtras();
 
-        mWeiboNetter = new WeiboNetter(getApplicationContext());
-
         // 清空图片缓存，包括裁剪、压缩后的图片 注意:必须要在上传完成后调用 必须要获取权限
         RxPermissions permissions = new RxPermissions(this);
         permissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe(new Observer<Boolean>() {
@@ -90,6 +88,7 @@ public class EditorActivity extends AppCompatActivity {
             public void onNext(Boolean aBoolean) {
                 if (aBoolean) {
                     PictureFileUtils.deleteCacheDirFile(EditorActivity.this);
+                    Log.i("EditorActivity", "删除PictureFileUtils缓存");
                 } else {
                     Toast.makeText(EditorActivity.this,
                             getString(R.string.picture_jurisdiction) + "，无法清楚本地缓存，请试着手动清理", Toast.LENGTH_SHORT).show();
@@ -304,15 +303,26 @@ public class EditorActivity extends AppCompatActivity {
 
     public void submitWeibo() {
         String content = mEditText.getText().toString();
-        String name = c[new Random().nextInt(c.length)] + "可爱";
-        newWeiboInstance.setUsername(name)
-                .setContent(content)
-                .setFrom("Bigbang")
+        User user = MainActivity.user;
+        //未登陆或者匿名发布时不上报用户信息
+        if (user == null || MainActivity.anonymity_me) {
+            String name = c[new Random().nextInt(c.length)] + "可爱";
+            newWeiboInstance.setUsername(name)
+                    .setHeadimg("headimg")
+                    .setUserId("0");
+        } else {
+            newWeiboInstance.setUsername(user.getUsername())
+                    .setHeadimg(user.getHeadimg())
+                    .setUserId("" + user.getId());
+        }
+
+        newWeiboInstance.setContent(content)
+                .setMsglevel("初来乍到")
                 .setPublicTime("1s前")
                 .setRecentComment("0")
                 .setRecentLike("0")
-                .setRecentShare("0");
-        mWeiboNetter.addWeibo(b.getString("entry_id"), newWeiboInstance, new RequestManager.ReqCallBack() {
+                .setRecentLow("0");
+        WeiboNetter.addWeibo(getApplicationContext(), b.getString("entry_id"), newWeiboInstance, new RequestManager.ReqCallBack() {
             @Override
             public void onReqSuccess(Object result) {
                 Intent i = new Intent();

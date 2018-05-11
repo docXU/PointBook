@@ -56,7 +56,9 @@ public class MainActivity extends AppCompatActivity implements HintDialogFragmen
     RelativeLayout searchStatusBar;
     //TODO：静态用户对象保持会话，SharePrefrence本地持久登录信息
     public static User user = null;
+    public static boolean anonymity_me = false;
     private boolean closeOverlay = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

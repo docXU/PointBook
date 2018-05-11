@@ -7,26 +7,59 @@ import java.io.Serializable;
  */
 
 public class Weibo implements Serializable {
-    private String username;
-    private String headimgurl;
+    private String userId;
+    private String weiboId;
     private String content;
     private String publicTime;
-    private String from;
+    private String msglevel;
     private String recentLike;
-    private String recentShare;
+    private String recentLow;
     private String recentComment;
     private NineGridModel contentImgs;
+    private User user;
+
+    //显示时用的，看详情再去服务器查更多信息
+    private String username;
+    private String headimg = "headimg";
 
     public Weibo(){
         contentImgs = new NineGridModel();
-    };
-
-    public String getHeadimgurl() {
-        return headimgurl;
+        user = null;
     }
 
-    public Weibo setHeadimgurl(String headimgurl) {
-        this.headimgurl = headimgurl;
+    public String getUsername() {
+        return username;
+    }
+
+    public Weibo setUsername(String username) {
+        this.username = username;
+        return this;
+    }
+
+    public String getHeadimg() {
+        return headimg;
+    }
+
+    public Weibo setHeadimg(String headimg) {
+        this.headimg = headimg;
+        return this;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public Weibo setUserId(String userId) {
+        this.userId = userId;
+        return this;
+    }
+
+    public String getWeiboId() {
+        return weiboId;
+    }
+
+    public Weibo setWeiboId(String weiboId) {
+        this.weiboId = weiboId;
         return this;
     }
 
@@ -50,16 +83,6 @@ public class Weibo implements Serializable {
         return this;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public Weibo setUsername(String username) {
-        this.username = username;
-        return this;
-    }
-
-
     public String getPublicTime() {
         return publicTime;
     }
@@ -69,12 +92,12 @@ public class Weibo implements Serializable {
         return this;
     }
 
-    public String getFrom() {
-        return from;
+    public String getMsglevel() {
+        return msglevel;
     }
 
-    public Weibo setFrom(String from) {
-        this.from = from;
+    public Weibo setMsglevel(String msglevel) {
+        this.msglevel = msglevel;
         return this;
     }
 
@@ -87,12 +110,12 @@ public class Weibo implements Serializable {
         return this;
     }
 
-    public String getRecentShare() {
-        return recentShare;
+    public String getRecentLow() {
+        return recentLow;
     }
 
-    public Weibo setRecentShare(String recentShare) {
-        this.recentShare = recentShare;
+    public Weibo setRecentLow(String recentLow) {
+        this.recentLow = recentLow;
         return this;
     }
 
@@ -102,6 +125,15 @@ public class Weibo implements Serializable {
 
     public Weibo setRecentComment(String recentComment) {
         this.recentComment = recentComment;
+        return this;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public Weibo setUser(User user) {
+        this.user = user;
         return this;
     }
 }

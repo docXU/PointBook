@@ -9,6 +9,7 @@ public class ConstURL {
 
     public static String WEIBO_GET = "weibo/get";
     public static String WEIBO_ADD = "weibo/add";
+    public static String WEIBO_COUNTER = "weibo/counter";
 
     public static String USER_GET = "user/get";
     public static String USER_VERIFY = "user/verify";

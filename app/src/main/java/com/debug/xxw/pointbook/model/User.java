@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.text.DateFormat;
 import java.util.Date;
 
 public class User implements Serializable {
@@ -147,7 +146,7 @@ public class User implements Serializable {
     public static User getUserSingleton(SharedPreferences sp) {
         Long expires = sp.getLong("expires", 0);
         //一天过期，避免多机登录修改用户资料时导致数据不同步。
-        if (new Date().getTime() - expires > 86400) {
+        if (new Date().getTime() - expires > 86400000) {
             return null;
         }
 

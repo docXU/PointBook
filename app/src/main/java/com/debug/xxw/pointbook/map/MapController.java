@@ -107,6 +107,7 @@ public class MapController implements ClusterRender, ClusterClickListener {
         mAMap.setCustomMapStylePath("/sdcard/Pointbook/custom_map");
         mAMap.setMapCustomEnable(true);
 
+
         rbl = mainActivity.findViewById(R.id.report_button_Layout);
         rbl.setVisibility(View.INVISIBLE);
 

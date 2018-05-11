@@ -14,12 +14,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.debug.xxw.pointbook.R;
 import com.debug.xxw.pointbook.adapter.WeiboListViewAdapter;
+import com.debug.xxw.pointbook.model.Interaction;
 import com.debug.xxw.pointbook.model.NineGridModel;
 import com.debug.xxw.pointbook.model.Tag;
+import com.debug.xxw.pointbook.model.User;
 import com.debug.xxw.pointbook.model.Weibo;
 import com.debug.xxw.pointbook.net.ConstURL;
 import com.debug.xxw.pointbook.net.RequestManager;
@@ -52,10 +55,12 @@ import java.util.List;
 public class FeedActivity extends AppCompatActivity {
     private String tag = FeedActivity.class.getSimpleName();
     private RecyclerView recyclerView;
+    final Context mContext = this;
     private WeiboListViewAdapter adapter;
     private final int RequestCode = 10;
 
     private List<Tag> tagList;
+    private List<Weibo> weiboList;
 
     private static int TAG_MAX_SIZE = 9;
     private boolean showGiftTag = false;
@@ -63,11 +68,10 @@ public class FeedActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final Context mContext = this;
+
         setContentView(R.layout.activity_weibo_list);
         Bundle bundle = this.getIntent().getExtras();
         recyclerView = (RecyclerView) findViewById(R.id.weiboRecycler);
-        WeiboNetter mWeiboNetter = new WeiboNetter(getApplicationContext());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -266,13 +270,58 @@ public class FeedActivity extends AppCompatActivity {
             recyclerView.setAdapter(adapter);
         }
 
-        mWeiboNetter.queryWeiboList(entryId, new RequestManager.ReqCallBack() {
+        WeiboNetter.queryWeiboList(mContext, entryId, new RequestManager.ReqCallBack() {
             @Override
             public void onReqSuccess(Object result) {
                 try {
                     JSONArray data = new JSONArray((String) result);
                     if (isList(data)) {
-                        adapter.setList(parseResultToWeibo(result));
+                        weiboList = parseResultToWeibo(result);
+                        adapter.setList(weiboList);
+                        adapter.setOnLikeClickListener(new WeiboListViewAdapter.OnItemClickListener() {
+                            @Override
+                            public void onClick(final int position, final String who) {
+                                if (who.equals(WeiboNetter.collect_counter)) {
+                                    //todo:添加收藏记录
+                                } else if (who.equals(WeiboListViewAdapter.head_view)) {
+                                    HashMap<String, String> params = new HashMap<>();
+                                    params.put("uid", weiboList.get(position).getUserId());
+
+                                    RequestManager.getInstance(FeedActivity.this).requestAsyn(ConstURL.USER_GET, RequestManager.TYPE_GET, params, new RequestManager.ReqCallBack<Object>() {
+                                        @Override
+                                        public void onReqSuccess(Object result) {
+                                            User user = User.parseResult(result);
+                                            Bundle bundle = new Bundle();
+                                            bundle.putSerializable("user", user);
+                                            Intent intent = new Intent().setClass(FeedActivity.this, ProfileActivity.class);
+                                            intent.putExtras(bundle);
+                                            FeedActivity.this.startActivity(intent);
+                                        }
+
+                                        @Override
+                                        public void onReqFailed(String errorMsg) {
+                                            //网络出错
+                                            Toast.makeText(FeedActivity.this, "匿名用户没什么好看的", Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                } else {
+                                    WeiboNetter.incCounter(mContext, who, weiboList.get(position).getWeiboId(), new RequestManager.ReqCallBack() {
+                                        @Override
+                                        public void onReqSuccess(Object result) {
+                                            String currentLike = (String) result;
+                                            adapter.changeCounter(position, currentLike, who);
+                                            Toast.makeText(mContext, "+1", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                        @Override
+                                        public void onReqFailed(String errorMsg) {
+                                            Toast.makeText(mContext, "网络出错，请稍候~", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+
+                            }
+                        });
                     } else {
                         Log.e(tag, parseErrorMessage(data));
                     }
@@ -315,13 +364,15 @@ public class FeedActivity extends AppCompatActivity {
                 try {
                     JSONObject jo = data.getJSONObject(i);
                     Weibo item = new Weibo()
+                            .setWeiboId(jo.getString("id"))
+                            .setUserId(jo.getString("uid"))
                             .setUsername(jo.getString("username"))
                             .setContent(jo.getString("content"))
-                            .setHeadimgurl(jo.getString("headimgurl"))
+                            .setHeadimg(jo.getString("headimg"))
                             .setPublicTime(jo.getString("create_time"))
-                            .setFrom(jo.getString("fromwhere"))
+                            .setMsglevel(jo.getString("msglevel"))
                             .setRecentLike(jo.getString("likecount"))
-                            .setRecentShare(jo.getString("sharecount"))
+                            .setRecentLow(jo.getString("lowcount"))
                             .setRecentComment(jo.getString("commentcount"));
                     NineGridModel ngm = new NineGridModel();
                     if (jo.has("urls")) {

@@ -85,21 +85,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/layout_nine_grid"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_marginTop="25dp"
-            android:layout_marginLeft="20dp"
-            android:drawableLeft="@drawable/ic_support_grey"
+            android:layout_marginStart="20dp"
+            android:drawableStart="@drawable/ic_support_grey"
             android:drawablePadding="5dp"
             android:text="207"/>
 
         <TextView
-            android:id="@+id/recent_share"
+            android:id="@+id/recent_low"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/recent_like"
             android:layout_centerInParent="true"
             android:layout_centerHorizontal="true"
-            android:drawableLeft="@drawable/ic_share_grey"
+            android:drawableStart="@drawable/ic_share_grey"
             android:drawablePadding="5dp"
             android:text="582"/>
 

@@ -39,14 +39,17 @@ public class NineGridTestLayout extends NineGridLayout {
         if (!url.startsWith("http")) {
             url = "file://" + url;
         }
+        Log.e("imageDisplay", "------------->" + url);
         ImageLoaderUtil.displayImage(imageView, url, ImageLoaderUtil.getPhotoImageOption(), new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
+                Log.e("imageDisplay", "----" + view.getWidth() + "--------->" + +view.getHeight());
             }
 
             @Override
             public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                Log.e(this.getClass().getName(), failReason.toString());
+                Log.e(this.getClass().getName(), failReason.getCause().toString());
+                failReason.getCause().printStackTrace();
             }
 
             @Override
@@ -69,6 +72,7 @@ public class NineGridTestLayout extends NineGridLayout {
                     newH = h * newW / w;
                 }
                 setOneImageLayoutParams(imageView, newW, newH);
+                Log.e("image", w + ":" + h);
             }
 
             @Override
@@ -86,6 +90,7 @@ public class NineGridTestLayout extends NineGridLayout {
         if (!url.startsWith("http")) {
             path = "file://" + url;
         }
+
         Picasso.with(mContext)
                 .load(path)
                 .error(R.mipmap.ic_launcher)

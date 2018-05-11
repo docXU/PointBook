@@ -111,6 +111,9 @@ public class SettingActivity extends AppCompatActivity {
                             boolean currentStatus = mSettingView.isCloseOverlay();
                             mSettingView.setCloseOverlay(!currentStatus);
                             ((TextView) ((LinearLayout) view).getChildAt(1)).setText(currentStatus ? "关闭图层" : "打开图层");
+                        } else if (position == 3) {
+                            MainActivity.anonymity_me = !MainActivity.anonymity_me;
+                            ((TextView) ((LinearLayout) view).getChildAt(1)).setText(MainActivity.anonymity_me ? "恢复身份模式" : "进入匿名发布");
                         }
                     }
                 });
@@ -224,7 +227,7 @@ public class SettingActivity extends AppCompatActivity {
         mListData.add(map4);
 
         HashMap<String, Object> map5 = new HashMap<>(2);
-        map5.put(FUN_NAME, "我的收藏");
+        map5.put(FUN_NAME, MainActivity.anonymity_me ? "恢复身份模式" : "进入匿名发布");
         map5.put(FUN_ICON, new LetterDrawable("T", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
         mListData.add(map5);
 

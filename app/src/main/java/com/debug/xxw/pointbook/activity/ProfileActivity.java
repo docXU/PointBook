@@ -29,10 +29,11 @@ public class ProfileActivity extends AppCompatActivity {
         User user = null;
         if (bundle != null) {
             user = (User) bundle.getSerializable("user");
-            last_interaction = bundle.getString("last_interaction");
+            last_interaction = bundle.getString("last_interaction") == null ? "未知" : bundle.getString("last_interaction");
         }
 
         if (user != null) {
+
             Picasso.with(ProfileActivity.this).load(user.getHeadimg()).error(R.drawable.defaulthead).into((ImageView) findViewById(R.id.userPicture));
             ((TextView) findViewById(R.id.user_name)).setText(user.getUsername());
             ((TextView) findViewById(R.id.last_interaction)).setText(String.format("状态：%s", last_interaction));

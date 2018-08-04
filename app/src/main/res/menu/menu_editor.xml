@@ -21,27 +21,27 @@
 
     <item
         android:id="@+id/action_undo"
+        android:icon="@mipmap/ic_action_undo"
         android:orderInCategory="80"
         android:title="@string/action_undo"
-        android:icon="@mipmap/ic_action_undo"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
     <item
         android:id="@+id/action_redo"
+        android:icon="@mipmap/ic_action_redo"
         android:orderInCategory="81"
         android:title="@string/action_redo"
-        android:icon="@mipmap/ic_action_redo"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
     <item
         android:id="@+id/action_clear"
         android:orderInCategory="81"
         android:title="@string/action_clear"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_submit"
+        android:icon="@mipmap/ic_action_submit"
         android:orderInCategory="81"
         android:title="@string/action_submit"
-        android:icon="@mipmap/ic_action_submit"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
 
 </menu>

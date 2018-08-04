@@ -10,16 +10,16 @@
         android:id="@+id/tag_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:text="this show tag text" />
+        android:text="this show tag text"
+        android:textColor="@color/black" />
 
     <ImageButton
         android:id="@+id/tag_button"
         android:layout_width="17dp"
         android:layout_height="17dp"
-        android:layout_weight="20"
-        android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_weight="20"
         app:srcCompat="@drawable/addimg_1x" />
 
 </LinearLayout>

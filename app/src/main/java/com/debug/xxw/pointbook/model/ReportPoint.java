@@ -11,6 +11,9 @@ public class ReportPoint {
     private String title;
     private String acticities;
 
+    public ReportPoint() {
+    }
+
     public LatLng getLocation() {
         return location;
     }
@@ -34,8 +37,6 @@ public class ReportPoint {
     public void setActicities(String acticities) {
         this.acticities = acticities;
     }
-
-    public ReportPoint() {}
 
 
 }

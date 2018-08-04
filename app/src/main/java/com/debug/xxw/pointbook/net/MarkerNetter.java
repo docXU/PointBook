@@ -2,23 +2,10 @@ package com.debug.xxw.pointbook.net;
 
 import android.content.Context;
 import android.location.Location;
-import android.util.Log;
 
-import com.amap.api.maps.model.LatLng;
-import com.amap.api.maps.model.LatLngBounds;
-import com.amap.api.maps.model.Marker;
 import com.debug.xxw.pointbook.model.ReportPoint;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.Exchanger;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * Created by xxw on 2017/10/20.
@@ -26,9 +13,9 @@ import okhttp3.Response;
 
 public class MarkerNetter {
 
-    private String TAG = "apiReq";
     RequestManager.ReqCallBack mGetCallback;
     RequestManager.ReqCallBack mAddCallback;
+    private String TAG = "apiReq";
     private Context mContext;
 
     public MarkerNetter(Context c) {

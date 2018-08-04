@@ -7,7 +7,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.widget.ImageView;
 
 import com.debug.xxw.pointbook.R;
 

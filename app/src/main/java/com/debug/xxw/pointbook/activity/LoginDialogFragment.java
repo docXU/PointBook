@@ -37,7 +37,18 @@ public class LoginDialogFragment extends DialogFragment implements View.OnClickL
     ProgressBar loading;
     CheckBox iv_display;
     TextView tv_register;
-
+    TextWatcherAdapter adapter = new TextWatcherAdapter() {
+        @Override
+        public void afterTextChanged(Editable s) {
+            //密码长度保证
+            int len = s.length();
+            if (len >= 6 && len <= 16) {
+                mBtnNext.setEnabled(true);
+            } else {
+                mBtnNext.setEnabled(false);
+            }
+        }
+    };
     private String email;
 
     public static LoginDialogFragment newInstance(String email) {
@@ -77,19 +88,6 @@ public class LoginDialogFragment extends DialogFragment implements View.OnClickL
         btn_close.setOnClickListener(this);
         iv_display.setOnCheckedChangeListener(this);
     }
-
-    TextWatcherAdapter adapter = new TextWatcherAdapter() {
-        @Override
-        public void afterTextChanged(Editable s) {
-            //密码长度保证
-            int len = s.length();
-            if (len >= 6 && len <= 16) {
-                mBtnNext.setEnabled(true);
-            } else {
-                mBtnNext.setEnabled(false);
-            }
-        }
-    };
 
     @Override
     public void onClick(View view) {

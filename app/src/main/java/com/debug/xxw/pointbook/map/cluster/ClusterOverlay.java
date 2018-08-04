@@ -50,6 +50,7 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
     private boolean hidden;
     private float mPXInMeters;
     private boolean mIsCanceled = false;
+    private AlphaAnimation mADDAnimation = new AlphaAnimation(0, 1);
 
     /**
      * 构造函数,批量添加聚合元素时,调用此构造函数
@@ -89,7 +90,7 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
     }
 
     public void hiddenOverlay() {
-        for (Marker m :mAddMarkers){
+        for (Marker m : mAddMarkers) {
             m.remove();
         }
         mAddMarkers.clear();
@@ -163,7 +164,6 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
         return false;
     }
 
-
     /**
      * 将聚合元素添加至地图上
      */
@@ -177,8 +177,6 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
             addSingleClusterToMap(cluster);
         }
     }
-
-    private AlphaAnimation mADDAnimation = new AlphaAnimation(0, 1);
 //    ScaleAnimation mADDAnimation = new ScaleAnimation(0, 1, 0, 1); //初始化生长效果动画
 //    setDuration(2000);  //设置动画时间 单位毫秒
 
@@ -340,6 +338,15 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
 
 //-----------------------辅助内部类用---------------------------------------------
 
+    public List<ClusterItem> getmClusterItems() {
+        return mClusterItems;
+    }
+
+    public void setmClusterItems(List<ClusterItem> mClusterItems) {
+        mIsCanceled = true;
+        this.mClusterItems = mClusterItems;
+    }
+
     /**
      * marker渐变动画，动画结束后将Marker删除
      */
@@ -425,15 +432,5 @@ public class ClusterOverlay implements AMap.OnMarkerClickListener {
                     break;
             }
         }
-    }
-
-
-    public List<ClusterItem> getmClusterItems() {
-        return mClusterItems;
-    }
-
-    public void setmClusterItems(List<ClusterItem> mClusterItems) {
-        mIsCanceled = true;
-        this.mClusterItems = mClusterItems;
     }
 }

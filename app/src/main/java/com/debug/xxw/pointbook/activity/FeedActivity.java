@@ -14,12 +14,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.debug.xxw.pointbook.R;
 import com.debug.xxw.pointbook.adapter.WeiboListViewAdapter;
-import com.debug.xxw.pointbook.model.Interaction;
 import com.debug.xxw.pointbook.model.NineGridModel;
 import com.debug.xxw.pointbook.model.Tag;
 import com.debug.xxw.pointbook.model.User;
@@ -53,16 +51,14 @@ import java.util.List;
  */
 
 public class FeedActivity extends AppCompatActivity {
+    private static int TAG_MAX_SIZE = 9;
+    final Context mContext = this;
+    private final int RequestCode = 10;
     private String tag = FeedActivity.class.getSimpleName();
     private RecyclerView recyclerView;
-    final Context mContext = this;
     private WeiboListViewAdapter adapter;
-    private final int RequestCode = 10;
-
     private List<Tag> tagList;
     private List<Weibo> weiboList;
-
-    private static int TAG_MAX_SIZE = 9;
     private boolean showGiftTag = false;
 
     @Override

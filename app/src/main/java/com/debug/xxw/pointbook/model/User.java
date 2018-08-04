@@ -28,6 +28,78 @@ public class User implements Serializable {
     private String weibo_name;
     private String describe;
 
+    public static boolean saveUserSingleton(SharedPreferences sp, User user) {
+        try {
+            SharedPreferences.Editor editor = sp.edit();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+            if (user == null) {
+                return editor.putString("user", "").putLong("expires", 0).commit();
+            }
+
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(user);
+            String base64Student = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+            oos.close();
+            return editor.putString("user", base64Student).putLong("expires", new Date().getTime()).commit();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static User getUserSingleton(SharedPreferences sp) {
+        Long expires = sp.getLong("expires", 0);
+        //一天过期，避免多机登录修改用户资料时导致数据不同步。
+        if (new Date().getTime() - expires > 86400000) {
+            return null;
+        }
+
+        String studentString = sp.getString("user", "");
+
+        if (studentString.isEmpty()) return null;
+
+        byte[] base64Student = Base64.decode(studentString, Base64.DEFAULT);
+        ByteArrayInputStream bais = new ByteArrayInputStream(base64Student);
+
+        User user = null;
+        try {
+            ObjectInputStream ois = new ObjectInputStream(bais);
+            user = (User) ois.readObject();
+            Log.e("------------->", "" + user.getDescribe() + user.getAge() + user.getUsername());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
+    /**
+     * 将服务器返回的json字符串对象解析为User对象
+     *
+     * @param result
+     * @return
+     */
+    public static User parseResult(Object result) {
+        try {
+            JSONObject user = new JSONObject((String) result);
+            return new User().setUsername(user.getString("username"))
+                    .setDescribe(user.getString("describe"))
+                    .setAddress(user.getString("address"))
+                    .setAge(user.getString("age"))
+                    .setEmail(user.getString("email"))
+                    .setHeadimg(user.getString("headimg"))
+                    .setId(Integer.parseInt(user.getString("id")))
+                    .setSex(user.getInt("sex") == 0 ? "女" : "男")
+                    .setTelephone(user.getString("telephone"))
+                    .setWechat_id(user.getString("wechat_id"))
+                    .setWeibo_name(user.getString("weibo_name"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     public int getId() {
         return id;
     }
@@ -125,77 +197,5 @@ public class User implements Serializable {
     public User setDescribe(String describe) {
         this.describe = describe;
         return this;
-    }
-
-    public static boolean saveUserSingleton(SharedPreferences sp, User user) {
-        try {
-            SharedPreferences.Editor editor = sp.edit();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-            if (user == null) {
-                return editor.putString("user", "").putLong("expires", 0).commit();
-            }
-
-            ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(user);
-            String base64Student = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
-            oos.close();
-            return editor.putString("user", base64Student).putLong("expires", new Date().getTime()).commit();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public static User getUserSingleton(SharedPreferences sp) {
-        Long expires = sp.getLong("expires", 0);
-        //一天过期，避免多机登录修改用户资料时导致数据不同步。
-        if (new Date().getTime() - expires > 86400000) {
-            return null;
-        }
-
-        String studentString = sp.getString("user", "");
-
-        if (studentString.isEmpty()) return null;
-
-        byte[] base64Student = Base64.decode(studentString, Base64.DEFAULT);
-        ByteArrayInputStream bais = new ByteArrayInputStream(base64Student);
-
-        User user = null;
-        try {
-            ObjectInputStream ois = new ObjectInputStream(bais);
-            user = (User) ois.readObject();
-            Log.e("------------->", "" + user.getDescribe() + user.getAge() + user.getUsername());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return user;
-    }
-
-    /**
-     * 将服务器返回的json字符串对象解析为User对象
-     *
-     * @param result
-     * @return
-     */
-    public static User parseResult(Object result) {
-        try {
-            JSONObject user = new JSONObject((String) result);
-            return new User().setUsername(user.getString("username"))
-                    .setDescribe(user.getString("describe"))
-                    .setAddress(user.getString("address"))
-                    .setAge(user.getString("age"))
-                    .setEmail(user.getString("email"))
-                    .setHeadimg(user.getString("headimg"))
-                    .setId(Integer.parseInt(user.getString("id")))
-                    .setSex(user.getInt("sex") == 0 ? "女" : "男")
-                    .setTelephone(user.getString("telephone"))
-                    .setWechat_id(user.getString("wechat_id"))
-                    .setWeibo_name(user.getString("weibo_name"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 }

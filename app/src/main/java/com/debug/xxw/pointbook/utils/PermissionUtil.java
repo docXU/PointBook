@@ -19,9 +19,9 @@ import com.debug.xxw.pointbook.viewmodel.HintDialogFragment;
  */
 
 public class PermissionUtil {
-    private static final String TAG = PermissionUtil.class.getName();
     public static final int LOCATION_PERMISSION_CODE = 100;
     public static final int STORAGE_PERMISSION_CODE = 101;
+    private static final String TAG = PermissionUtil.class.getName();
 
     public static boolean checkLocationPermission(Activity activity) {
         // 检查是否有定位权限
@@ -91,7 +91,8 @@ public class PermissionUtil {
             case STORAGE_PERMISSION_CODE:
                 permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
                 break;
-            default:break;
+            default:
+                break;
         }
         return permission;
     }

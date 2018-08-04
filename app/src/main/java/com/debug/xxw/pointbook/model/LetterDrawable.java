@@ -27,7 +27,7 @@ public class LetterDrawable extends Drawable {
         mText = str;
     }
 
-    public void initPaint(){
+    public void initPaint() {
         mCirclePaint.setStrokeCap(Paint.Cap.SQUARE);
         mCirclePaint.setStyle(Paint.Style.FILL);
         mCirclePaint.setAntiAlias(true);
@@ -50,9 +50,9 @@ public class LetterDrawable extends Drawable {
     public void draw(Canvas canvas) {
         final int saveCount = canvas.save();
         Rect bounds = getBounds();
-        canvas.drawCircle(bounds.centerX(), bounds.centerY(), bounds.width()/2, mCirclePaint);
+        canvas.drawCircle(bounds.centerX(), bounds.centerY(), bounds.width() / 2, mCirclePaint);
 
-        final int textSize = bounds.width()*2/3;
+        final int textSize = bounds.width() * 2 / 3;
         mTextPaint.setTextSize(textSize);
         Paint.FontMetricsInt fontMetrics = mTextPaint.getFontMetricsInt();
         int baseline = (bounds.height() - fontMetrics.bottom + fontMetrics.top) / 2 - fontMetrics.top;

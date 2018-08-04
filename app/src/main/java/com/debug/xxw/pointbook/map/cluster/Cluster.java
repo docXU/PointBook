@@ -34,12 +34,12 @@ public class Cluster {
         return mLatLng;
     }
 
-    void setMarker(Marker marker) {
-        mMarker = marker;
-    }
-
     Marker getMarker() {
         return mMarker;
+    }
+
+    void setMarker(Marker marker) {
+        mMarker = marker;
     }
 
     List<ClusterItem> getClusterItems() {

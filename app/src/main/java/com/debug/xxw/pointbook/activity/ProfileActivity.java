@@ -17,8 +17,8 @@ import com.squareup.picasso.Picasso;
  * 需要带入user和last_interaction
  */
 public class ProfileActivity extends AppCompatActivity {
-    private String last_interaction;
     public static int requestCode = 101;
+    private String last_interaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

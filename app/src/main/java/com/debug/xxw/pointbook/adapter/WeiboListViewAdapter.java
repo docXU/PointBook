@@ -5,14 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.debug.xxw.pointbook.R;
 import com.debug.xxw.pointbook.model.Weibo;
-import com.debug.xxw.pointbook.net.ConstURL;
-import com.debug.xxw.pointbook.net.RequestManager;
 import com.debug.xxw.pointbook.net.WeiboNetter;
 import com.debug.xxw.pointbook.viewmodel.CircleImageView;
 import com.debug.xxw.pointbook.viewmodel.NineGridTestLayout;
@@ -22,10 +18,9 @@ import java.util.List;
 
 public class WeiboListViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    public static String head_view = "head_view";
     private Context context;
     private List<Weibo> mList;
-
-    public static String head_view = "head_view";
     private OnItemClickListener onLikeClickListener;
 
     public WeiboListViewAdapter(Context context, List<Weibo> list) {
@@ -108,6 +103,14 @@ public class WeiboListViewAdapter extends RecyclerView.Adapter<RecyclerView.View
         this.notifyDataSetChanged();
     }
 
+    public void setOnLikeClickListener(OnItemClickListener onItemClickListener) {
+        this.onLikeClickListener = onItemClickListener;
+    }
+
+    public interface OnItemClickListener {
+        void onClick(int positionm, String who);
+    }
+
     public class CommunityViewHolder extends RecyclerView.ViewHolder {
 
         CircleImageView userPic;
@@ -133,13 +136,5 @@ public class WeiboListViewAdapter extends RecyclerView.Adapter<RecyclerView.View
             recentLow = itemView.findViewById(R.id.recent_low);
             recentComment = itemView.findViewById(R.id.recent_comment);
         }
-    }
-
-    public interface OnItemClickListener {
-        void onClick(int positionm, String who);
-    }
-
-    public void setOnLikeClickListener(OnItemClickListener onItemClickListener) {
-        this.onLikeClickListener = onItemClickListener;
     }
 }

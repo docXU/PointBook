@@ -37,7 +37,7 @@
                 android:layout_marginTop="20dp"
                 android:elevation="4dp"
                 android:theme="@style/ThemeOverlay.AppCompat.Light"
-                app:layout_collapseMode="pin"/>
+                app:layout_collapseMode="pin" />
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
@@ -61,6 +61,7 @@
             android:layout_height="match_parent" />
 
     </android.support.v7.widget.LinearLayoutCompat>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/post_fab"
         android:layout_width="wrap_content"

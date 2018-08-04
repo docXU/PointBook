@@ -48,15 +48,15 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity implements HintDialogFragment.DialogFragmentCallback, Toolbar.OnMenuItemClickListener, IOnSearchClickListener {
 
+    //TODO：静态用户对象保持会话，SharePrefrence本地持久登录信息
+    public static User user = null;
+    public static boolean anonymity_me = false;
     Toolbar toolbar;
     MapController mMapController;
     MapView mMapView;
     FloatingActionButton mFab;
     RecommendSearchFragment searchFragment;
     RelativeLayout searchStatusBar;
-    //TODO：静态用户对象保持会话，SharePrefrence本地持久登录信息
-    public static User user = null;
-    public static boolean anonymity_me = false;
     private boolean closeOverlay = false;
 
 
@@ -180,34 +180,6 @@ public class MainActivity extends AppCompatActivity implements HintDialogFragmen
         return true;
     }
 
-    class ButtonDropDownAnimationListener implements Animator.AnimatorListener {
-        @Override
-        public void onAnimationStart(Animator animation) {
-
-        }
-
-        @Override
-        public void onAnimationEnd(Animator animation) {
-            mFab.setVisibility(View.GONE);
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("user", user);
-            bundle.putBoolean("closeOverlay", closeOverlay);
-            Intent i = new Intent(MainActivity.this, SettingActivity.class);
-            i.putExtras(bundle);
-            startActivityForResult(i, 100);
-        }
-
-        @Override
-        public void onAnimationCancel(Animator animation) {
-
-        }
-
-        @Override
-        public void onAnimationRepeat(Animator animation) {
-
-        }
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -329,5 +301,33 @@ public class MainActivity extends AppCompatActivity implements HintDialogFragmen
         super.onDestroy();
         //销毁资源
         mMapController.onDestroy();
+    }
+
+    class ButtonDropDownAnimationListener implements Animator.AnimatorListener {
+        @Override
+        public void onAnimationStart(Animator animation) {
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            mFab.setVisibility(View.GONE);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("user", user);
+            bundle.putBoolean("closeOverlay", closeOverlay);
+            Intent i = new Intent(MainActivity.this, SettingActivity.class);
+            i.putExtras(bundle);
+            startActivityForResult(i, 100);
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animation) {
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animation) {
+
+        }
     }
 }

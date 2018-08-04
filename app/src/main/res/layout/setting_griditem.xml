@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/fun_ic"
@@ -9,12 +10,13 @@
         android:layout_height="35dp"
         android:layout_gravity="center"
         android:contentDescription="@string/setting_icon" />
+
     <TextView
         android:id="@+id/fun_name"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:textSize="14sp"
-        android:textColor="@android:color/black"
         android:layout_gravity="center"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:textSize="14sp" />
 </LinearLayout>

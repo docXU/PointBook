@@ -48,13 +48,7 @@ public class GridImageAdapter extends
      * 点击添加图片跳转
      */
     private onAddPicClickListener mOnAddPicClickListener;
-
-    public interface onAddPicClickListener {
-        /**
-         * 点击“添加图片”按钮回调
-         */
-        void onAddPicClick();
-    }
+    private OnItemClickListener mItemClickListener;
 
     public GridImageAdapter(Context context, onAddPicClickListener mOnAddPicClickListener) {
         this.context = context;
@@ -68,20 +62,6 @@ public class GridImageAdapter extends
 
     public void setList(List<LocalMedia> list) {
         this.list = list;
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
-
-        ImageView mImg;
-        LinearLayout ll_del;
-        TextView tv_duration;
-
-        public ViewHolder(View view) {
-            super(view);
-            mImg = (ImageView) view.findViewById(R.id.fiv);
-            ll_del = (LinearLayout) view.findViewById(R.id.ll_del);
-            tv_duration = (TextView) view.findViewById(R.id.tv_duration);
-        }
     }
 
     @Override
@@ -209,13 +189,32 @@ public class GridImageAdapter extends
         }
     }
 
-    private OnItemClickListener mItemClickListener;
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.mItemClickListener = listener;
+    }
+
+    public interface onAddPicClickListener {
+        /**
+         * 点击“添加图片”按钮回调
+         */
+        void onAddPicClick();
+    }
 
     public interface OnItemClickListener {
         void onItemClick(int position, View v);
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.mItemClickListener = listener;
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        ImageView mImg;
+        LinearLayout ll_del;
+        TextView tv_duration;
+
+        public ViewHolder(View view) {
+            super(view);
+            mImg = (ImageView) view.findViewById(R.id.fiv);
+            ll_del = (LinearLayout) view.findViewById(R.id.ll_del);
+            tv_duration = (TextView) view.findViewById(R.id.tv_duration);
+        }
     }
 }

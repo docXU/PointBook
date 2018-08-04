@@ -29,16 +29,6 @@ public class SettingView extends ViewGroup {
     private GridView mGridView;
     private FloatingActionButton mFab;
     private float mDensity = 1;
-
-    public boolean isCloseOverlay() {
-        return closeOverlay;
-    }
-
-    public SettingView setCloseOverlay(boolean closeOverlay) {
-        this.closeOverlay = closeOverlay;
-        return this;
-    }
-
     private boolean closeOverlay;
 
     public SettingView(Context context) {
@@ -55,6 +45,15 @@ public class SettingView extends ViewGroup {
         mDensity = context.getResources().getDisplayMetrics().density;
         init(context);
 
+    }
+
+    public boolean isCloseOverlay() {
+        return closeOverlay;
+    }
+
+    public SettingView setCloseOverlay(boolean closeOverlay) {
+        this.closeOverlay = closeOverlay;
+        return this;
     }
 
     @Override

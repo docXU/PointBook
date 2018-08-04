@@ -40,19 +40,17 @@ import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.Poi;
-import com.debug.xxw.pointbook.activity.MainActivity;
+import com.debug.xxw.pointbook.R;
+import com.debug.xxw.pointbook.activity.FeedActivity;
 import com.debug.xxw.pointbook.map.cluster.ClusterClickListener;
 import com.debug.xxw.pointbook.map.cluster.ClusterItem;
 import com.debug.xxw.pointbook.map.cluster.ClusterOverlay;
 import com.debug.xxw.pointbook.map.cluster.ClusterRender;
-import com.debug.xxw.pointbook.activity.FeedActivity;
 import com.debug.xxw.pointbook.model.RegionItem;
-import com.debug.xxw.pointbook.R;
 import com.debug.xxw.pointbook.model.ReportPoint;
 import com.debug.xxw.pointbook.model.Tag;
 import com.debug.xxw.pointbook.net.MarkerNetter;
 import com.debug.xxw.pointbook.net.RequestManager;
-import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -74,15 +72,15 @@ import static android.content.ContentValues.TAG;
 
 public class MapController implements ClusterRender, ClusterClickListener {
 
+    private final Context mainContext;
     private AMap mAMap;
     private MarkerNetter mMarkerNetter;
-
     private Map<Integer, Drawable> mBackDrawAbles = new HashMap<>();
     private ClusterOverlay mClusterOverlay;
     private ClusterOverlay searchResultOverlay;
-    private final Context mainContext;
     private Activity mainActivity;
     private float clusterRadius = 35;
+
     /**
      * 活动范围（公里）
      */
@@ -317,6 +315,8 @@ public class MapController implements ClusterRender, ClusterClickListener {
     public void refreshMarkers() {
         if (lastLocation != null) {
             mMarkerNetter.queryMarker(lastLocation, activityScope);
+        } else {
+
         }
     }
 

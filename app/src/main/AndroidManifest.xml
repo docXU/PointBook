@@ -6,12 +6,12 @@
 
     <application
         android:name=".MyApplication"
+        android:allowBackup="true"
+        android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:allowBackup="true"
-        android:fullBackupContent="true"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".activity.MainActivity"
@@ -21,9 +21,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.FeedActivity" android:theme="@style/MyTranslucentTheme"/>
-        <activity android:name=".activity.EditorActivity" android:label="发布" android:theme="@style/AppTheme"/>
-        <activity android:name=".activity.SettingActivity" android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".activity.FeedActivity"
+            android:theme="@style/MyTranslucentTheme" />
+        <activity
+            android:name=".activity.EditorActivity"
+            android:label="发布"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activity.SettingActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.ProfileActivity"
             android:theme="@style/MyTranslucentTheme" />
@@ -33,13 +40,17 @@
 
         <!-- release 0050f84cadd37b603e40a86917839a31-->
         <!-- develop 01559bbd7e79fbffbaf241950cbc98cb-->
-        <meta-data android:name="com.amap.api.v2.apikey" android:value="01559bbd7e79fbffbaf241950cbc98cb"/>
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="01559bbd7e79fbffbaf241950cbc98cb" />
     </application>
 
     //地图包、搜索包需要的基础权限
     <!-- Normal Permissions-->
     <!-- 请求网络 -->
-    <uses-permission android:name="android.permission.INTERNET" tools:ignore="ManifestOrder" />
+    <uses-permission
+        android:name="android.permission.INTERNET"
+        tools:ignore="ManifestOrder" />
     <!--获取运营商信息，用于支持提供运营商信息相关的接口-->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!--用于访问wifi网络信息，wifi信息会用于进行网络定位-->
@@ -59,10 +70,12 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!--读取缓存数据-->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
     <!-- 更改设置 -->
-    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"
+    <uses-permission
+        android:name="android.permission.CHANGE_CONFIGURATION"
         tools:ignore="ProtectedPermissions" />
 
 </manifest>

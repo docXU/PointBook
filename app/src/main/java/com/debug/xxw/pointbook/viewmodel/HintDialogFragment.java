@@ -55,13 +55,15 @@ public class HintDialogFragment extends DialogFragment {
 
     public interface DialogFragmentCallback {
         /**
-         *  确认
+         * 确认
+         *
          * @param requestCode
          */
         void doPositiveClick(int requestCode);
 
         /**
          * 取消
+         *
          * @param requestCode
          */
         void doNegativeClick(int requestCode);

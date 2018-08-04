@@ -22,7 +22,7 @@ public class Weibo implements Serializable {
     private String username;
     private String headimg = "headimg";
 
-    public Weibo(){
+    public Weibo() {
         contentImgs = new NineGridModel();
         user = null;
     }

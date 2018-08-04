@@ -35,13 +35,12 @@ import java.util.List;
  * @author xxw
  */
 public class SettingActivity extends AppCompatActivity {
-    private SettingView mSettingView;
-    private List<HashMap<String, Object>> mListData;
+    public static int requestCode = 105;
     private final String FUN_NAME = "fun_name";
     private final String FUN_ICON = "fun_icon";
+    private SettingView mSettingView;
+    private List<HashMap<String, Object>> mListData;
     private User user;
-
-    public static int requestCode = 105;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +81,45 @@ public class SettingActivity extends AppCompatActivity {
             name.setText(user.getUsername());
             des.setText(user.getDescribe());
         }
+    }
+
+    public void initListData() {
+        mListData = new ArrayList<>();
+
+        HashMap<String, Object> map1 = new HashMap<>(2);
+        map1.put(FUN_NAME, "首页");
+        map1.put(FUN_ICON, new LetterDrawable("M", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
+        mListData.add(map1);
+
+        HashMap<String, Object> map2 = new HashMap<>(2);
+        map2.put(FUN_NAME, mSettingView.isCloseOverlay() ? "打开图层" : "关闭图层");
+        map2.put(FUN_ICON, new LetterDrawable("P", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
+        mListData.add(map2);
+
+        HashMap<String, Object> map4 = new HashMap<>(2);
+        map4.put(FUN_NAME, "调整活动范围");
+        map4.put(FUN_ICON, new LetterDrawable("R", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
+        mListData.add(map4);
+
+        HashMap<String, Object> map5 = new HashMap<>(2);
+        map5.put(FUN_NAME, MainActivity.anonymity_me ? "恢复身份模式" : "进入匿名模式");
+        map5.put(FUN_ICON, new LetterDrawable("T", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
+        mListData.add(map5);
+
+        HashMap<String, Object> map6 = new HashMap<>(2);
+        map6.put(FUN_NAME, "个人中心");
+        map6.put(FUN_ICON, new LetterDrawable("S", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
+        mListData.add(map6);
+
+        HashMap<String, Object> map7 = new HashMap<>(2);
+        map7.put(FUN_NAME, "注销账户");
+        map7.put(FUN_ICON, new LetterDrawable("I", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
+        mListData.add(map7);
+
+        HashMap<String, Object> map8 = new HashMap<>(2);
+        map8.put(FUN_NAME, "退出");
+        map8.put(FUN_ICON, new LetterDrawable("I", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
+        mListData.add(map8);
     }
 
     public class SettingListAdapter extends BaseAdapter {
@@ -219,45 +257,6 @@ public class SettingActivity extends AppCompatActivity {
         private CircleImageView head;
         private TextView username;
         private TextView describe;
-    }
-
-    public void initListData() {
-        mListData = new ArrayList<>();
-
-        HashMap<String, Object> map1 = new HashMap<>(2);
-        map1.put(FUN_NAME, "首页");
-        map1.put(FUN_ICON, new LetterDrawable("M", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
-        mListData.add(map1);
-
-        HashMap<String, Object> map2 = new HashMap<>(2);
-        map2.put(FUN_NAME, mSettingView.isCloseOverlay() ? "打开图层" : "关闭图层");
-        map2.put(FUN_ICON, new LetterDrawable("P", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
-        mListData.add(map2);
-
-        HashMap<String, Object> map4 = new HashMap<>(2);
-        map4.put(FUN_NAME, "调整活动范围");
-        map4.put(FUN_ICON, new LetterDrawable("R", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
-        mListData.add(map4);
-
-        HashMap<String, Object> map5 = new HashMap<>(2);
-        map5.put(FUN_NAME, MainActivity.anonymity_me ? "恢复身份模式" : "进入匿名模式");
-        map5.put(FUN_ICON, new LetterDrawable("T", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
-        mListData.add(map5);
-
-        HashMap<String, Object> map6 = new HashMap<>(2);
-        map6.put(FUN_NAME, "个人中心");
-        map6.put(FUN_ICON, new LetterDrawable("S", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
-        mListData.add(map6);
-
-        HashMap<String, Object> map7 = new HashMap<>(2);
-        map7.put(FUN_NAME, "注销账户");
-        map7.put(FUN_ICON, new LetterDrawable("I", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
-        mListData.add(map7);
-
-        HashMap<String, Object> map8 = new HashMap<>(2);
-        map8.put(FUN_NAME, "退出");
-        map8.put(FUN_ICON, new LetterDrawable("I", getResources().getColor(R.color.colorCircleText), getResources().getColor(R.color.colorAccent)));
-        mListData.add(map8);
     }
 
 

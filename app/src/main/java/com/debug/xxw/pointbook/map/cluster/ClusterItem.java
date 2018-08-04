@@ -3,7 +3,6 @@ package com.debug.xxw.pointbook.map.cluster;
 import com.amap.api.maps.model.LatLng;
 
 /**
- *
  * @author yiyi.qi
  * @date 16/10/10
  */
@@ -14,5 +13,5 @@ public interface ClusterItem {
      *
      * @return
      */
-     LatLng getPosition();
+    LatLng getPosition();
 }

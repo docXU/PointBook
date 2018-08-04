@@ -6,7 +6,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 /**
- *
  * @author xxw
  * @date 2017/10/22
  */

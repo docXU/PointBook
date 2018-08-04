@@ -30,13 +30,13 @@ import okhttp3.Response;
  */
 
 public class RequestManager {
+    public static final int TYPE_GET = 0;//get请求
     private static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8"); //mdiatype 这个需要和服务端保持一致
     private static final String TAG = RequestManager.class.getSimpleName();
-    private String BASE_URL;  //请求接口根地址
-    private static volatile RequestManager mInstance;//单利引用
-    public static final int TYPE_GET = 0;//get请求
     private static final int TYPE_POST_JSON = 1;//post请求参数为json
     private static final int TYPE_POST_FORM = 2;//post请求参数为表单
+    private static volatile RequestManager mInstance;//单利引用
+    private String BASE_URL;  //请求接口根地址
     private OkHttpClient mOkHttpClient;//okHttpClient 实例
     private Handler okHttpHandler;//全局处理子线程和M主线程通信
 
@@ -94,7 +94,8 @@ public class RequestManager {
             case TYPE_POST_FORM:
                 requestPostBySynWithForm(actionUrl, paramsMap);
                 break;
-                default:break;
+            default:
+                break;
         }
     }
 
@@ -224,7 +225,8 @@ public class RequestManager {
             case TYPE_POST_FORM:
                 call = requestPostByAsynWithForm(actionUrl, paramsMap, callBack);
                 break;
-                default:break;
+            default:
+                break;
         }
         return call;
     }
@@ -370,18 +372,6 @@ public class RequestManager {
         return null;
     }
 
-    public interface ReqCallBack<T> {
-        /**
-         * 响应成功
-         */
-        void onReqSuccess(T result);
-
-        /**
-         * 响应失败
-         */
-        void onReqFailed(String errorMsg);
-    }
-
     /**
      * 统一为请求添加头信息
      *
@@ -433,8 +423,6 @@ public class RequestManager {
         });
     }
 
-    //***********异步文件上传与下载**************
-
     /**
      * 上传文件
      *
@@ -470,6 +458,8 @@ public class RequestManager {
             }
         });
     }
+
+    //***********异步文件上传与下载**************
 
     /**
      * 上传文件
@@ -523,5 +513,17 @@ public class RequestManager {
         } catch (Exception e) {
             Log.e(TAG, e.toString());
         }
+    }
+
+    public interface ReqCallBack<T> {
+        /**
+         * 响应成功
+         */
+        void onReqSuccess(T result);
+
+        /**
+         * 响应失败
+         */
+        void onReqFailed(String errorMsg);
     }
 }

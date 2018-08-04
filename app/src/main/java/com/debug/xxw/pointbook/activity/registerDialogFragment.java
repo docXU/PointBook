@@ -30,7 +30,18 @@ public class registerDialogFragment extends DialogFragment implements View.OnCli
     Button mBtnRegister;
     ImageButton btn_close;
     ProgressBar loading;
-
+    TextWatcherAdapter adapter = new TextWatcherAdapter() {
+        @Override
+        public void afterTextChanged(Editable s) {
+            //密码长度保证
+            int len = s.length();
+            if (len >= 8 && len <= 16) {
+                mBtnRegister.setEnabled(true);
+            } else {
+                mBtnRegister.setEnabled(false);
+            }
+        }
+    };
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -55,19 +66,6 @@ public class registerDialogFragment extends DialogFragment implements View.OnCli
         mBtnRegister.setOnClickListener(this);
         btn_close.setOnClickListener(this);
     }
-
-    TextWatcherAdapter adapter = new TextWatcherAdapter() {
-        @Override
-        public void afterTextChanged(Editable s) {
-            //密码长度保证
-            int len = s.length();
-            if (len >= 8 && len <= 16) {
-                mBtnRegister.setEnabled(true);
-            } else {
-                mBtnRegister.setEnabled(false);
-            }
-        }
-    };
 
     @Override
     public void onClick(View v) {

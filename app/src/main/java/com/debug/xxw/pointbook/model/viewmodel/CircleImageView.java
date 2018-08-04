@@ -1,4 +1,4 @@
-package com.debug.xxw.pointbook.viewmodel;
+package com.debug.xxw.pointbook.model.viewmodel;
 
 /*
  * Copyright 2014 - 2015 Henning Dodenhof

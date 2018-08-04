@@ -9,9 +9,9 @@ import android.widget.TextView;
 
 import com.debug.xxw.pointbook.R;
 import com.debug.xxw.pointbook.model.Weibo;
-import com.debug.xxw.pointbook.net.WeiboNetter;
-import com.debug.xxw.pointbook.viewmodel.CircleImageView;
-import com.debug.xxw.pointbook.viewmodel.NineGridTestLayout;
+import com.debug.xxw.pointbook.utils.net.WeiboNetter;
+import com.debug.xxw.pointbook.model.viewmodel.CircleImageView;
+import com.debug.xxw.pointbook.model.viewmodel.NineGridTestLayout;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

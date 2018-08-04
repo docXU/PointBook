@@ -5,7 +5,7 @@
     android:background="@color/colorPrimaryDark"
     android:orientation="vertical">
 
-    <com.debug.xxw.pointbook.viewmodel.SettingView
+    <com.debug.xxw.pointbook.model.viewmodel.SettingView
         android:id="@+id/setting_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,6 +18,6 @@
             android:layout_marginBottom="16dp"
             android:src="@android:drawable/ic_menu_revert" />
 
-    </com.debug.xxw.pointbook.viewmodel.SettingView>
+    </com.debug.xxw.pointbook.model.viewmodel.SettingView>
 
 </LinearLayout>

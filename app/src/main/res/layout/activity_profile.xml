@@ -26,7 +26,7 @@
             android:textSize="18sp"
             android:visibility="gone" />
 
-        <com.debug.xxw.pointbook.viewmodel.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+        <com.debug.xxw.pointbook.model.viewmodel.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/userPicture"
             android:layout_width="100dp"
             android:layout_height="100dp"

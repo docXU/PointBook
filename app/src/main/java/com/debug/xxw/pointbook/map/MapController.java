@@ -49,8 +49,8 @@ import com.debug.xxw.pointbook.map.cluster.ClusterRender;
 import com.debug.xxw.pointbook.model.RegionItem;
 import com.debug.xxw.pointbook.model.ReportPoint;
 import com.debug.xxw.pointbook.model.Tag;
-import com.debug.xxw.pointbook.net.MarkerNetter;
-import com.debug.xxw.pointbook.net.RequestManager;
+import com.debug.xxw.pointbook.utils.net.MarkerNetter;
+import com.debug.xxw.pointbook.utils.net.RequestManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;

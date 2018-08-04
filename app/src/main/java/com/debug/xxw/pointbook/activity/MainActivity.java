@@ -35,8 +35,8 @@ import com.debug.xxw.pointbook.model.Tag;
 import com.debug.xxw.pointbook.model.User;
 import com.debug.xxw.pointbook.utils.ElasticOutInterpolator;
 import com.debug.xxw.pointbook.utils.PermissionUtil;
-import com.debug.xxw.pointbook.viewmodel.HintDialogFragment;
-import com.debug.xxw.pointbook.viewmodel.RecommendSearchFragment;
+import com.debug.xxw.pointbook.model.viewmodel.HintDialogFragment;
+import com.debug.xxw.pointbook.model.viewmodel.RecommendSearchFragment;
 import com.wyt.searchbox.SearchFragment;
 import com.wyt.searchbox.custom.IOnSearchClickListener;
 

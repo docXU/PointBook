@@ -1,4 +1,4 @@
-package com.debug.xxw.pointbook.viewmodel;
+package com.debug.xxw.pointbook.model.viewmodel;
 
 import android.content.Context;
 import android.content.res.TypedArray;

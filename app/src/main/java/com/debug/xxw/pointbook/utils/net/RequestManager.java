@@ -1,4 +1,4 @@
-package com.debug.xxw.pointbook.net;
+package com.debug.xxw.pointbook.utils.net;
 
 import android.content.Context;
 import android.os.Build;

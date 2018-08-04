@@ -23,8 +23,8 @@ import com.debug.xxw.pointbook.R;
 import com.debug.xxw.pointbook.model.Interaction;
 import com.debug.xxw.pointbook.model.LetterDrawable;
 import com.debug.xxw.pointbook.model.User;
-import com.debug.xxw.pointbook.viewmodel.CircleImageView;
-import com.debug.xxw.pointbook.viewmodel.SettingView;
+import com.debug.xxw.pointbook.model.viewmodel.CircleImageView;
+import com.debug.xxw.pointbook.model.viewmodel.SettingView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

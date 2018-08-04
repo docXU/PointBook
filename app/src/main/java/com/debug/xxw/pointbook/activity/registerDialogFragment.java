@@ -17,8 +17,8 @@ import android.widget.Toast;
 import com.debug.xxw.pointbook.R;
 import com.debug.xxw.pointbook.adapter.TextWatcherAdapter;
 import com.debug.xxw.pointbook.model.User;
-import com.debug.xxw.pointbook.net.ConstURL;
-import com.debug.xxw.pointbook.net.RequestManager;
+import com.debug.xxw.pointbook.utils.net.ConstURL;
+import com.debug.xxw.pointbook.utils.net.RequestManager;
 
 import java.util.HashMap;
 

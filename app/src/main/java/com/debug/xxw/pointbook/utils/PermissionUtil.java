@@ -9,7 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.debug.xxw.pointbook.R;
-import com.debug.xxw.pointbook.viewmodel.HintDialogFragment;
+import com.debug.xxw.pointbook.model.viewmodel.HintDialogFragment;
 
 /**
  * Created by xxw on 2018/3/23.
